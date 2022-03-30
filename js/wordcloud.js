@@ -8,7 +8,7 @@
 // const height = 400 - margin.top - margin.bottom;
 
 // List of words
-var myWords = [{word: "Banana", size: "10"}, {word: "Bread", size: "20"}, {word: "Egg", size: "50"}, {word: "Flour", size: "40"}, {word: "Chocolate", size: "20"}, {word: "Salt", size: "60"} ]
+var myWords = [{word: "Banana", size: 10}, {word: "Bread", size: 20}, {word: "Egg", size: 50}, {word: "Flour", size: 40}, {word: "Chocolate", size: 20}, {word: "Salt", size: 60} ]
 
 // append the svg object to the body of the page
 var svg = d3.select("#word-cloud").append("svg")
@@ -25,7 +25,7 @@ var layout = d3.layout.cloud()
   .words(myWords.map(function(d) { return {text: d.word, size:d.size}; }))
   .padding(5)        //space between words
   .rotate(function() { return ~~(Math.random() * 2) * 90; })
-  .fontSize(function(d) { return d.size; })      // font size of words
+  .fontSize(function(d) { return 5*Math.sqrt(d.size); })      // font size of words
   .on("end", draw);
 layout.start();
 
