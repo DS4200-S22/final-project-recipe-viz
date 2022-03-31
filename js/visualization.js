@@ -1,3 +1,12 @@
+
+// Console logging data
+d3.csv("data/recipe_tot.csv").then(function(data) {
+    for (let i = 0; i < 10; i++) {
+        console.log(data[i]);
+  }
+});
+
+
 const margin = {
     top: 80,
     right: 80,
