@@ -34,6 +34,13 @@ d3.csv("data/recipe_tot.csv").then(function(data) {
   delete ingredientsObj['olive oil'];
   delete ingredientsObj['pepper'];
 
+  ingredientsObj['garlic cloves'] = ingredientsObj['garlic cloves'] + ingredientsObj['garlic']
+  delete ingredientsObj['garlic']
+
+  ingredientsObj['egg'] = ingredientsObj['egg'] + ingredientsObj['eggs']
+  delete ingredientsObj['eggs']
+
+
   const myWords = []
   Object.keys(ingredientsObj).forEach((ingredient) => {
     const wordsObject = {word: ingredient, size: ingredientsObj[ingredient]};
