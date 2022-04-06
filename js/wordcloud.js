@@ -8,10 +8,10 @@
 // const height = 400 - margin.top - margin.bottom;
 
 // List of words
-var myWords = [{word: "Banana", size: 10}, {word: "Bread", size: 20}, {word: "Egg", size: 50}, {word: "Flour", size: 40}, {word: "Chocolate", size: 20}, {word: "Salt", size: 60} ]
+const myWords = [{word: "Banana", size: 10}, {word: "Bread", size: 20}, {word: "Egg", size: 50}, {word: "Flour", size: 40}, {word: "Chocolate", size: 20}, {word: "Salt", size: 60} ]
 
 // append the svg object to the body of the page
-var svg = d3.select("#word-cloud").append("svg")
+const svg = d3.select("#word-cloud").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
@@ -20,7 +20,7 @@ var svg = d3.select("#word-cloud").append("svg")
 
 // Constructs a new cloud layout instance. It run an algorithm to find the position of words that suits your requirements
 // Wordcloud features that are different from one word to the other must be here
-var layout = d3.layout.cloud()
+const layout = d3.layout.cloud()
   .size([width, height])
   .words(myWords.map(function(d) { return {text: d.word, size:d.size}; }))
   .padding(5)        //space between words

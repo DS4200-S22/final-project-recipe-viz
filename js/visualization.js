@@ -16,11 +16,11 @@ const margin = {
 const width = 400 - margin.left - margin.right;
 const height = 400 - margin.top - margin.bottom;
 
-var svg = d3.select("#vis-container").append("svg")
+const svg = d3.select("#vis-container").append("svg")
   .attr("width", width + margin.left + margin.right)
   .attr("height", height + margin.top + margin.bottom)
 
-var g = svg.append("g")
+const g = svg.append("g")
   .attr("transform",
     "translate(" + margin.left + "," + margin.top + ")");
 
@@ -56,24 +56,24 @@ g.selectAll(".point")
   .style("stroke", "lightgray");
 
 // top histogram
-var gTop = svg.append("g")
+const gTop = svg.append("g")
   .attr("transform",
     "translate(" + margin.left + "," + 0 + ")");
 
-var xBins = d3.histogram()
+const xBins = d3.histogram()
   .domain(x.domain())
   .thresholds(x.ticks(10))
   .value(function(d) {
     return d[0];
   })(data);
 
-var xy = d3.scaleLinear()
+const xy = d3.scaleLinear()
   .domain([0, d3.max(xBins, function(d) {
     return d.length;
   })])
   .range([margin.top, 0]);
 
-var xBar = gTop.selectAll(".bar")
+const xBar = gTop.selectAll(".bar")
   .data(xBins)
   .enter().append("g")
   .attr("class", "bar")
@@ -81,7 +81,7 @@ var xBar = gTop.selectAll(".bar")
     return "translate(" + x(d.x0) + "," + xy(d.length) + ")";
   });
 
-var bWidth = x(xBins[0].x1) - x(xBins[0].x0) - 1;
+const bWidth = x(xBins[0].x1) - x(xBins[0].x0) - 1;
 xBar.append("rect")
   .attr("x", 1)
   .attr("width", bWidth)
@@ -102,24 +102,24 @@ xBar.append("text")
   .style("font", "9px sans-serif");
   
 // right histogram
-var gRight = svg.append("g")
+const gRight = svg.append("g")
   .attr("transform",
     "translate(" + (margin.left + width) + "," + margin.top + ")");
 
-var yBins = d3.histogram()
+const yBins = d3.histogram()
   .domain(y.domain())
   .thresholds(y.ticks(10))
   .value(function(d) {
     return d[1];
   })(data);
 
-var yx = d3.scaleLinear()
+const yx = d3.scaleLinear()
   .domain([0, d3.max(yBins, function(d) {
     return d.length;
   })])
   .range([0, margin.right]);
 
-var yBar = gRight.selectAll(".bar")
+const yBar = gRight.selectAll(".bar")
   .data(yBins)
   .enter().append("g")
   .attr("class", "bar")
@@ -127,7 +127,7 @@ var yBar = gRight.selectAll(".bar")
     return "translate(" + 0 + "," + y(d.x1) + ")";
   });
 
-var bWidth = y(yBins[0].x0) - y(yBins[0].x1) - 1;
+const bWidth = y(yBins[0].x0) - y(yBins[0].x1) - 1;
 yBar.append("rect")
   .attr("y", 1)
   .attr("width", function(d){
