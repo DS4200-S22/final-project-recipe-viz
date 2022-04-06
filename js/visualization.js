@@ -1,10 +1,43 @@
 
 // Console logging data
 d3.csv("data/recipe_tot.csv").then(function(data) {
-    for (let i = 0; i < 10; i++) {
-        console.log(data[i]);
+    const recipeAttr = ['minutes','n_steps','n_ingredients','calories (kCal)','total fat (g)',
+                      'sugar (g)','sodium (mg)','protein (g)','saturated fat (g)','carbohydrates (g)'];
+
+
+    // add the options to the button
+    let dropdownY = d3.select("#visbutton")
+      .append('select')
+      .attr("id", "attrY");
+
+    // add the options to the button
+    dropdownY // Add a button
+      .selectAll('myOptions') // Next 4 lines add 6 options = 6 colors
+        .data(recipeAttr)
+      .enter()
+        .append('option')
+      .text(function (d) { return d; }) // text showed in the menu
+      .attr("value", function (d) { return d; }) // corresponding value returned by the button
+
+    
+    // add the options to the button
+    let dropdownX = d3.select("#visbutton")
+      .append('select')
+      .attr("float", "right");
+
+    console.log(dropdownX.attr("float"));
+
+    // add the options to the button
+    dropdownX // Add a button
+      .selectAll('myOptions') // Next 4 lines add 6 options = 6 colors
+        .data(recipeAttr)
+      .enter()
+        .append('option')
+      .text(function (d) { return d; }) // text showed in the menu
+      .attr("value", function (d) { return d; }) // corresponding value returned by the button
+
   }
-});
+);
 
 
 const margin = {
