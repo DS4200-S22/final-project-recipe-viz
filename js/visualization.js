@@ -16,11 +16,11 @@ const margin = {
 const width = 400 - margin.left - margin.right;
 const height = 400 - margin.top - margin.bottom;
 
-const svg = d3.select("#vis-container").append("svg")
+const svg1 = d3.select("#vis-container").append("svg")
   .attr("width", width + margin.left + margin.right)
   .attr("height", height + margin.top + margin.bottom)
 
-const g = svg.append("g")
+const g = svg1.append("g")
   .attr("transform",
     "translate(" + margin.left + "," + margin.top + ")");
 
@@ -56,7 +56,7 @@ g.selectAll(".point")
   .style("stroke", "lightgray");
 
 // top histogram
-const gTop = svg.append("g")
+const gTop = svg1.append("g")
   .attr("transform",
     "translate(" + margin.left + "," + 0 + ")");
 
@@ -81,7 +81,7 @@ const xBar = gTop.selectAll(".bar")
     return "translate(" + x(d.x0) + "," + xy(d.length) + ")";
   });
 
-const bWidth = x(xBins[0].x1) - x(xBins[0].x0) - 1;
+let bWidth = x(xBins[0].x1) - x(xBins[0].x0) - 1;
 xBar.append("rect")
   .attr("x", 1)
   .attr("width", bWidth)
@@ -102,7 +102,7 @@ xBar.append("text")
   .style("font", "9px sans-serif");
   
 // right histogram
-const gRight = svg.append("g")
+const gRight = svg1.append("g")
   .attr("transform",
     "translate(" + (margin.left + width) + "," + margin.top + ")");
 
@@ -127,7 +127,7 @@ const yBar = gRight.selectAll(".bar")
     return "translate(" + 0 + "," + y(d.x1) + ")";
   });
 
-const bWidth = y(yBins[0].x0) - y(yBins[0].x1) - 1;
+bWidth = y(yBins[0].x0) - y(yBins[0].x1) - 1;
 yBar.append("rect")
   .attr("y", 1)
   .attr("width", function(d){

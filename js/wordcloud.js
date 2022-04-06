@@ -1,17 +1,8 @@
-// const margin = {
-//   top: 80,
-//   right: 80,
-//   bottom: 20,
-//   left: 20
-// };
-// const width = 400 - margin.left - margin.right;
-// const height = 400 - margin.top - margin.bottom;
-
 // List of words
 const myWords = [{word: "Banana", size: 10}, {word: "Bread", size: 20}, {word: "Egg", size: 50}, {word: "Flour", size: 40}, {word: "Chocolate", size: 20}, {word: "Salt", size: 60} ]
 
 // append the svg object to the body of the page
-const svg = d3.select("#word-cloud").append("svg")
+const svg2 = d3.select("#word-cloud").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
@@ -32,7 +23,7 @@ layout.start();
 // This function takes the output of 'layout' above and draw the words
 // Wordcloud features that are THE SAME from one word to the other can be here
 function draw(words) {
-  svg
+  svg2
     .append("g")
       .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
       .selectAll("text")
