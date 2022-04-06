@@ -6,145 +6,175 @@ d3.csv("data/recipe_tot.csv").then(function(data) {
   }
 });
 
-
 const margin = {
-    top: 80,
-    right: 80,
-    bottom: 20,
-    left: 20
-  };
-const width = 400 - margin.left - margin.right;
-const height = 400 - margin.top - margin.bottom;
+    top: 60,
+    right: 20,
+    bottom: 40,
+    left: 40
+};
+const width = 900 - margin.left - margin.right;
+const height = 500 - margin.top - margin.bottom;
 
 const svg1 = d3.select("#vis-container").append("svg")
-  .attr("width", width + margin.left + margin.right)
-  .attr("height", height + margin.top + margin.bottom)
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
 
-const g = svg1.append("g")
-  .attr("transform",
-    "translate(" + margin.left + "," + margin.top + ")");
+d3.csv("data/recipe_tot.csv").then((recipeData) => {
 
-const x = d3.scaleLinear().range([0, width]).domain([0, 10]);
-const y = d3.scaleLinear().range([height, 0]).domain([0, 10]);
+  //minutes, n_steps, calories (kCal), protein (g), protein to calorie ratio
+  let xKey = "minutes"
+  let yKey = "calories (kCal)"
 
-// Add the X Axis
-g.append("g")
-  .attr("transform", "translate(0," + height + ")")
-  .call(d3.axisBottom(x));
+  let maxX1 = d3.max(recipeData, (d) => { return d[xKey]; });
+  let maxY1 = d3.max(recipeData, (d) => { return d[yKey]; });
+  let x, y;
 
-// Add the Y Axis
-g.append("g")
-  .call(d3.axisLeft(y));
+  const g = svg1.append("g")
+    .attr("transform",
+      "translate(" + margin.left + "," + margin.top + ")");
 
-const random = d3.randomNormal(0, 1.2),
-  data = d3.range(100).map(function() {
-    return [random() + 5, random() + 5];
-  });
+  x = d3.scaleLinear().range([margin.left, width - margin.right]).domain([0, maxX1]);
+  y = d3.scaleLinear().range([height - margin.bottom, margin.top]).domain([0, maxY1]);
 
-g.selectAll(".point")
-  .data(data)
-  .enter()
-  .append("circle")
-  .attr("cx", function(d) {
-    return x(d[0]);
-  })
-  .attr("cy", function(d) {
-    return y(d[1]);
-  })
-  .attr("r", 7)
-  .style("fill", "steelblue")
-  .style("stroke", "lightgray");
+  // Add the X Axis
+  g.append("g")
+    // .attr("transform", "translate(0," + height + ")")
+    // .attr("transform", `translate(0,${height - margin.bottom})`)
+    .attr("transform", `translate(0,${height - margin.bottom})`)
+    .call(d3.axisBottom(x))
+    .call((g) => g.append("text")
+      .attr("x", width - margin.right)
+      .attr("y", margin.bottom - 4)
+      .attr("fill", "black")
+      .attr("text-anchor", "end")
+      .text(xKey)
+    );;
 
-// top histogram
-const gTop = svg1.append("g")
-  .attr("transform",
-    "translate(" + margin.left + "," + 0 + ")");
+  // Add the Y Axis
+  g.append("g")
+    .attr("transform", `translate(${margin.left}, 0)`)
+    .call(d3.axisLeft(y))
+    // .attr("font-size", '20px')
+    .call((g) => g.append("text")
+      .attr("x", 0)
+      .attr("y", margin.top)
+      .attr("fill", "black")
+      .attr("text-anchor", "end")
+      .text(yKey)
+    );
 
-const xBins = d3.histogram()
-  .domain(x.domain())
-  .thresholds(x.ticks(10))
-  .value(function(d) {
-    return d[0];
-  })(data);
+  const random = d3.randomNormal(0, 1.2),
+    data = d3.range(100).map(function() {
+      return [random() + 5, random() + 5];
+    });
 
-const xy = d3.scaleLinear()
-  .domain([0, d3.max(xBins, function(d) {
-    return d.length;
-  })])
-  .range([margin.top, 0]);
+  // scatterplot
+  g.selectAll("circle")
+    .data(recipeData)
+    .enter()
+    .append("circle")
+    .attr("cx", function(d) {
+      return x(d[xKey]);
+    })
+    .attr("cy", function(d) {
+      return y(d[yKey]);
+    })
+    .attr("r", 5)
+    .style("fill", "steelblue")
+    .style("stroke", "lightblue");
 
-const xBar = gTop.selectAll(".bar")
-  .data(xBins)
-  .enter().append("g")
-  .attr("class", "bar")
-  .attr("transform", function(d) {
-    return "translate(" + x(d.x0) + "," + xy(d.length) + ")";
-  });
+  // top histogram
+  const gTop = svg1.append("g")
+    .attr("transform",
+      "translate(" + margin.left + "," + margin.top + ")");
+      // "translate(0,0)");
 
-let bWidth = x(xBins[0].x1) - x(xBins[0].x0) - 1;
-xBar.append("rect")
-  .attr("x", 1)
-  .attr("width", bWidth)
-  .attr("height", function(d) {
-    return margin.top - xy(d.length);
-  })
-  .style("fill", "steelblue");
+  const xBins = d3.histogram()
+    .domain(x.domain())
+    .thresholds(x.ticks(10))
+    .value(function(d) {
+      return d[xKey];
+    })(recipeData);
 
-xBar.append("text")
-  .attr("dy", ".75em")
-  .attr("y", 2)
-  .attr("x", bWidth / 2)
-  .attr("text-anchor", "middle")
-  .text(function(d) {
-    return d.length < 4 ? "" : d.length;
-  })
-  .style("fill", "white")
-  .style("font", "9px sans-serif");
-  
-// right histogram
-const gRight = svg1.append("g")
-  .attr("transform",
-    "translate(" + (margin.left + width) + "," + margin.top + ")");
+  const xy = d3.scaleLinear()
+    .domain([0, d3.max(xBins, function(d) {
+      return d.length;
+    })])
+    .range([margin.top, 0]);
 
-const yBins = d3.histogram()
-  .domain(y.domain())
-  .thresholds(y.ticks(10))
-  .value(function(d) {
-    return d[1];
-  })(data);
+  const xBar = gTop.selectAll(".bar")
+    .data(xBins)
+    .enter().append("g")
+    .attr("class", "bar")
+    .attr("transform", function(d) {
+      return "translate(" + x(d.x0) + "," + xy(d.length) + ")";
+    });
 
-const yx = d3.scaleLinear()
-  .domain([0, d3.max(yBins, function(d) {
-    return d.length;
-  })])
-  .range([0, margin.right]);
+  let bWidth = x(xBins[0].x1) - x(xBins[0].x0) - 1;
+  xBar.append("rect")
+    .attr("x", 1)
+    .attr("width", bWidth)
+    .attr("height", function(d) {
+      return margin.top - xy(d.length);
+    })
+    .style("fill", "steelblue");
 
-const yBar = gRight.selectAll(".bar")
-  .data(yBins)
-  .enter().append("g")
-  .attr("class", "bar")
-  .attr("transform", function(d) {
-    return "translate(" + 0 + "," + y(d.x1) + ")";
-  });
+  xBar.append("text")
+    .attr("dy", "-0.25em")
+    .attr("y", 2)
+    .attr("x", bWidth / 2)
+    .attr("text-anchor", "middle")
+    .text(function(d) {
+      return d.length < 4 ? "" : d.length;
+    })
+    .style("fill", "black")
+    .style("font", "9px sans-serif");
+    
+  // right histogram
+  const gRight = svg1.append("g")
+    .attr("transform",
+      "translate(" + (margin.left + width) + "," + margin.top + ")");
 
-bWidth = y(yBins[0].x0) - y(yBins[0].x1) - 1;
-yBar.append("rect")
-  .attr("y", 1)
-  .attr("width", function(d){
-    return yx(d.length);
-  })
-  .attr("height", bWidth)
-  .style("fill", "steelblue");
+  const yBins = d3.histogram()
+    .domain(y.domain())
+    .thresholds(y.ticks(10))
+    .value(function(d) {
+      return d[1];
+    })(data);
 
-yBar.append("text")
-  .attr("dx", "-.75em")
-  .attr("y", bWidth / 2 + 1)
-  .attr("x", function(d){
-    return yx(d.length);
-  })
-  .attr("text-anchor", "middle")
-  .text(function(d) {
-    return d.length < 4 ? "" : d.length;
-  })
-  .style("fill", "white")
-  .style("font", "9px sans-serif");
+  const yx = d3.scaleLinear()
+    .domain([0, d3.max(yBins, function(d) {
+      return d.length;
+    })])
+    .range([0, margin.right]);
+
+  const yBar = gRight.selectAll(".bar")
+    .data(yBins)
+    .enter().append("g")
+    .attr("class", "bar")
+    .attr("transform", function(d) {
+      return "translate(" + 0 + "," + y(d.x1) + ")";
+    });
+
+  bWidth = y(yBins[0].x0) - y(yBins[0].x1) - 1;
+  yBar.append("rect")
+    .attr("y", 1)
+    .attr("width", function(d){
+      return yx(d.length);
+    })
+    .attr("height", bWidth)
+    .style("fill", "steelblue");
+
+  yBar.append("text")
+    .attr("dx", "-.75em")
+    .attr("y", bWidth / 2 + 1)
+    .attr("x", function(d){
+      return yx(d.length);
+    })
+    .attr("text-anchor", "middle")
+    .text(function(d) {
+      return d.length < 4 ? "" : d.length;
+    })
+    .style("fill", "white")
+    .style("font", "9px sans-serif");
+});
