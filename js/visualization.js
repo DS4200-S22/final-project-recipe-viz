@@ -34,7 +34,7 @@ d3.csv("data/recipe_tot.csv").then(function(data) {
     xKey1 = 'minutes'
     yKey1 = 'minutes'
 
-    let maxX = d3.max(data, (d) => { return d[xKey1]; });
+    let maxX = d3.max(data, (d) => { return parseInt(d[xKey1]); });
 
     // Add X axis
     x = d3.scaleLinear()
@@ -46,7 +46,8 @@ d3.csv("data/recipe_tot.csv").then(function(data) {
                       .call(d3.axisBottom(x));
 
     // Find max y 
-    let maxY = d3.max(data, (d) => { return d[yKey1]; });
+    let maxY = d3.max(data, (d) => { return parseInt(d[yKey1]); });
+    console.log(maxY);
 
     // Add Y axis
     y = d3.scaleLinear()
@@ -55,13 +56,48 @@ d3.csv("data/recipe_tot.csv").then(function(data) {
 
     let yAxis = svg.append("g")
                       .attr("transform", `translate(${margin.left}, 0)`) 
-                      .call(d3.axisLeft(y)); 
+                      .call(d3.axisLeft(y));
 
     // add the options to the button
     let dropdownY = d3.select("#visbutton")
       .append('select')
       .attr('id', 'dropY');
 
+    // Add a tooltip div. Here I define the general feature of the tooltip: stuff that do not depend on the data point.
+    // Its opacity is set to 0: we don't see it by default.
+    const tooltip = d3.select("#vis-container")
+      .append("div")
+      .style("opacity", 0)
+      .attr("class", "tooltip")
+      .style("background-color", "white")
+      .style("border", "solid")
+      .style("border-width", "1px")
+      .style("border-radius", "5px")
+      .style("padding", "10px")
+
+
+
+    // A function that change this tooltip when the user hover a point.
+    // Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
+    const mouseover = function(event, d) {
+      tooltip
+        .style("opacity", 1)
+    }
+
+    const mousemove = function(event, d) {
+      tooltip
+        .html(`Name: ${d['name']}<br>ID: ${d['id']}`)
+        .style("left", (event.x)/2 + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+        .style("top", (event.y)/2 + "px")
+    }
+
+    // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+    const mouseleave = function(event,d) {
+      tooltip
+        .transition()
+        .duration(200)
+        .style("opacity", 0)
+    }
     // Add points
     dot = svg.selectAll("circle")
                         .data(data)
@@ -71,7 +107,10 @@ d3.csv("data/recipe_tot.csv").then(function(data) {
                           .attr("cx", (d) => x(d[xKey1]))
                           .attr("cy", (d) => y(d[yKey1]))
                           .attr("r", 5)
-                          .style("opacity", 0.5);
+                          .style("opacity", 0.5)
+                        .on("mouseover", mouseover )
+                        .on("mousemove", mousemove )
+                        .on("mouseleave", mouseleave )
 
     // add the options to the button
     dropdownY // Add a button
@@ -100,39 +139,35 @@ d3.csv("data/recipe_tot.csv").then(function(data) {
     // A function that update the chart
     function updateX(selectedGroup) {
 
-      // Create new data with the selection?
-      const dataFilterX = data.map(function(d){return {valueX:d[selectedGroup]} })
-
       // Update X axis
-      maxX = d3.max(data, (d) => { return d[selectedGroup]; });
+      maxX = d3.max(data, (d) => { return parseInt(d[selectedGroup]); });
       x.domain([0,maxX])
       xAxis.transition().duration(1000).call(d3.axisBottom(x))
 
       // Give these new data to update dot
       dot
-        .data(dataFilterX)
+        .data(data)
         .transition()
         .duration(1000)
-          .attr("cx", d => x(+d.valueX))
+          .attr("cx", d => x(+d[selectedGroup]))
+
     }
 
     // A function that update the chart
     function updateY(selectedGroup) {
 
-      // Create new data with the selection?
-      const dataFilterY = data.map(function(d){return {valueY:d[selectedGroup]} })
-
       // Update Y axis
-      maxY = d3.max(data, (d) => { return d[selectedGroup]; });
+      maxY = d3.max(data, (d) => { return parseInt(d[selectedGroup]); });
       y.domain([0,maxY])
+      console.log(maxY);
       yAxis.transition().duration(1000).call(d3.axisLeft(y))
 
       // Give these new data to update dot
       dot
-        .data(dataFilterY)
+        .data(data)
         .transition()
         .duration(1000)
-          .attr("cy", d => y(+d.valueY))
+          .attr("cy", d => y(+d[selectedGroup]))
     };
 
     // When the button is changed, run the updateChart function
