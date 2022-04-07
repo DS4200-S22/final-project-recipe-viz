@@ -190,4 +190,99 @@ d3.csv("data/recipe_tot.csv").then(function(data) {
         updateY(selectedOption)
 
     })
+
+    // top histogram
+    const gTop = svg.append("g")
+      .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
+        // "translate(0,0)");
+
+    const xBins = d3.histogram()
+      .domain(x.domain())
+      .thresholds(x.ticks(10))
+      .value(function(d) {
+        return d[xKey1];
+      })(data);
+
+    const xy = d3.scaleLinear()
+      .domain([0, d3.max(xBins, function(d) {
+        return d.length;
+      })])
+      .range([margin.top, 0]);
+
+    const xBar = gTop.selectAll(".bar")
+      .data(xBins)
+      .enter().append("g")
+      .attr("class", "bar")
+      .attr("transform", function(d) {
+        return "translate(" + x(d.x0) + "," + xy(d.length) + ")";
+      });
+
+    let bWidth = x(xBins[0].x1) - x(xBins[0].x0) - 1;
+    xBar.append("rect")
+      .attr("x", 1)
+      .attr("width", bWidth)
+      .attr("height", function(d) {
+        return margin.top - xy(d.length);
+      })
+      .style("fill", "steelblue");
+
+    xBar.append("text")
+      .attr("dy", "-0.25em")
+      .attr("y", 2)
+      .attr("x", bWidth / 2)
+      .attr("text-anchor", "middle")
+      .text(function(d) {
+        return d.length < 4 ? "" : d.length;
+      })
+      .style("fill", "black")
+      .style("font", "9px sans-serif");
+      
+    // right histogram
+    const gRight = svg.append("g")
+      .attr("transform",
+        "translate(" + (margin.left + width) + "," + margin.top + ")");
+
+    const yBins = d3.histogram()
+      .domain(y.domain())
+      .thresholds(y.ticks(10))
+      .value(function(d) {
+        return d[1];
+      })(data);
+
+    const yx = d3.scaleLinear()
+      .domain([0, d3.max(yBins, function(d) {
+        return d.length;
+      })])
+      .range([0, margin.right]);
+
+    const yBar = gRight.selectAll(".bar")
+      .data(yBins)
+      .enter().append("g")
+      .attr("class", "bar")
+      .attr("transform", function(d) {
+        return "translate(" + 0 + "," + y(d.x1) + ")";
+      });
+
+    bWidth = y(yBins[0].x0) - y(yBins[0].x1) - 1;
+    yBar.append("rect")
+      .attr("y", 1)
+      .attr("width", function(d){
+        return yx(d.length);
+      })
+      .attr("height", bWidth)
+      .style("fill", "steelblue");
+
+    yBar.append("text")
+      .attr("dx", "-.75em")
+      .attr("y", bWidth / 2 + 1)
+      .attr("x", function(d){
+        return yx(d.length);
+      })
+      .attr("text-anchor", "middle")
+      .text(function(d) {
+        return d.length < 4 ? "" : d.length;
+      })
+      .style("fill", "white")
+      .style("font", "9px sans-serif");
 });
