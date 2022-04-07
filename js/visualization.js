@@ -1,5 +1,14 @@
+// setting parameters
+const margin = {
+    top: 80,
+    right: 80,
+    bottom: 20,
+    left: 20
+  };
+const width = 400 - margin.left - margin.right;
+const height = 400 - margin.top - margin.bottom;
 
-// Console logging data
+// Filtering Axes
 d3.csv("data/recipe_tot.csv").then(function(data) {
     const recipeAttr = ['minutes','n_steps','n_ingredients','calories (kCal)','total fat (g)',
                       'sugar (g)','sodium (mg)','protein (g)','saturated fat (g)','carbohydrates (g)'];
@@ -8,7 +17,7 @@ d3.csv("data/recipe_tot.csv").then(function(data) {
     // add the options to the button
     let dropdownY = d3.select("#visbutton")
       .append('select')
-      .attr("id", "attrY");
+      .attr('id', 'dropY');
 
     // add the options to the button
     dropdownY // Add a button
@@ -23,9 +32,7 @@ d3.csv("data/recipe_tot.csv").then(function(data) {
     // add the options to the button
     let dropdownX = d3.select("#visbutton")
       .append('select')
-      .attr("float", "right");
-
-    console.log(dropdownX.attr("float"));
+      .attr('id', 'dropX');
 
     // add the options to the button
     dropdownX // Add a button
@@ -36,18 +43,49 @@ d3.csv("data/recipe_tot.csv").then(function(data) {
       .text(function (d) { return d; }) // text showed in the menu
       .attr("value", function (d) { return d; }) // corresponding value returned by the button
 
-  }
-);
+    // A function that update the chart
+    function updateX(selectedGroup) {
 
+      // Create new data with the selection?
+      const dataFilterX = data.map(function(d){return {valueX:d[selectedGroup]} })
 
-const margin = {
-    top: 80,
-    right: 80,
-    bottom: 20,
-    left: 20
-  };
-const width = 400 - margin.left - margin.right;
-const height = 400 - margin.top - margin.bottom;
+      // Give these new data to update dot
+      dot
+        .data(dataFilterX)
+        .transition()
+        .duration(1000)
+          .attr("cx", d => x(+d.valueX))
+    }
+
+    // A function that update the chart
+    function updateY(selectedGroup) {
+
+      // Create new data with the selection?
+      const dataFilterY = data.map(function(d){return {valueY:d[selectedGroup]} })
+
+      // Give these new data to update dot
+      dot
+        .data(dataFilterY)
+        .transition()
+        .duration(1000)
+          .attr("cy", d => y(+d.valueY))
+    };
+
+    // When the button is changed, run the updateChart function
+    d3.select("#dropX").on("change", function(event, d) {
+        // recover the option that has been chosen
+        let selectedOption = d3.select(this).property("value")
+        // run the updateChart function with this selected option
+        updateX(selectedOption)
+    })
+
+    // When the button is changed, run the updateChart function
+    d3.select("#dropY").on("change", function(event, d) {
+        // recover the option that has been chosen
+        let selectedOption = d3.select(this).property("value")
+        // run the updateChart function with this selected option
+        updateY(selectedOption)
+});
 
 const svg1 = d3.select("#vis-container").append("svg")
   .attr("width", width + margin.left + margin.right)
@@ -69,10 +107,6 @@ g.append("g")
 g.append("g")
   .call(d3.axisLeft(y));
 
-const random = d3.randomNormal(0, 1.2),
-  data = d3.range(100).map(function() {
-    return [random() + 5, random() + 5];
-  });
 
 g.selectAll(".point")
   .data(data)
@@ -87,97 +121,3 @@ g.selectAll(".point")
   .attr("r", 7)
   .style("fill", "steelblue")
   .style("stroke", "lightgray");
-
-// top histogram
-const gTop = svg1.append("g")
-  .attr("transform",
-    "translate(" + margin.left + "," + 0 + ")");
-
-const xBins = d3.histogram()
-  .domain(x.domain())
-  .thresholds(x.ticks(10))
-  .value(function(d) {
-    return d[0];
-  })(data);
-
-const xy = d3.scaleLinear()
-  .domain([0, d3.max(xBins, function(d) {
-    return d.length;
-  })])
-  .range([margin.top, 0]);
-
-const xBar = gTop.selectAll(".bar")
-  .data(xBins)
-  .enter().append("g")
-  .attr("class", "bar")
-  .attr("transform", function(d) {
-    return "translate(" + x(d.x0) + "," + xy(d.length) + ")";
-  });
-
-let bWidth = x(xBins[0].x1) - x(xBins[0].x0) - 1;
-xBar.append("rect")
-  .attr("x", 1)
-  .attr("width", bWidth)
-  .attr("height", function(d) {
-    return margin.top - xy(d.length);
-  })
-  .style("fill", "steelblue");
-
-xBar.append("text")
-  .attr("dy", ".75em")
-  .attr("y", 2)
-  .attr("x", bWidth / 2)
-  .attr("text-anchor", "middle")
-  .text(function(d) {
-    return d.length < 4 ? "" : d.length;
-  })
-  .style("fill", "white")
-  .style("font", "9px sans-serif");
-  
-// right histogram
-const gRight = svg1.append("g")
-  .attr("transform",
-    "translate(" + (margin.left + width) + "," + margin.top + ")");
-
-const yBins = d3.histogram()
-  .domain(y.domain())
-  .thresholds(y.ticks(10))
-  .value(function(d) {
-    return d[1];
-  })(data);
-
-const yx = d3.scaleLinear()
-  .domain([0, d3.max(yBins, function(d) {
-    return d.length;
-  })])
-  .range([0, margin.right]);
-
-const yBar = gRight.selectAll(".bar")
-  .data(yBins)
-  .enter().append("g")
-  .attr("class", "bar")
-  .attr("transform", function(d) {
-    return "translate(" + 0 + "," + y(d.x1) + ")";
-  });
-
-bWidth = y(yBins[0].x0) - y(yBins[0].x1) - 1;
-yBar.append("rect")
-  .attr("y", 1)
-  .attr("width", function(d){
-    return yx(d.length);
-  })
-  .attr("height", bWidth)
-  .style("fill", "steelblue");
-
-yBar.append("text")
-  .attr("dx", "-.75em")
-  .attr("y", bWidth / 2 + 1)
-  .attr("x", function(d){
-    return yx(d.length);
-  })
-  .attr("text-anchor", "middle")
-  .text(function(d) {
-    return d.length < 4 ? "" : d.length;
-  })
-  .style("fill", "white")
-  .style("font", "9px sans-serif");
