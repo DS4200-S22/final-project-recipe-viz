@@ -165,7 +165,6 @@ d3.csv("data/recipe_tot.csv").then(function(data) {
       // Update Y axis
       maxY = d3.max(data, (d) => { return parseInt(d[selectedGroup]); });
       y.domain([0,maxY])
-      console.log(maxY);
       yAxis.transition().duration(1000).call(d3.axisLeft(y))
 
       // Give these new data to update dot
