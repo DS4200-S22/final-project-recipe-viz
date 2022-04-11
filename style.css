@@ -24,3 +24,8 @@ h3 {
   width: 100%;
   height: 100%;
 }
+
+.selected {
+  stroke: black;
+  stroke-width: 3;
+}

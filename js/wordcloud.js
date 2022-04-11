@@ -1,3 +1,6 @@
+let myWords;
+let brush;
+
 d3.csv("data/recipe_tot.csv").then(function(data) {
 
   const margin = {
@@ -72,7 +75,7 @@ d3.csv("data/recipe_tot.csv").then(function(data) {
   // This function takes the output of 'layout' above and draw the words
   // Wordcloud features that are THE SAME from one word to the other can be here
   function draw(words) {
-    svg2
+    myWords = svg2
       .append("g")
         .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
         .selectAll("text")
@@ -85,5 +88,35 @@ d3.csv("data/recipe_tot.csv").then(function(data) {
             return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
           })
           .text(function(d) { return d.text; });
+
+    brush = d3.brush()
+      .extent([[0, 0], [width, height]])
+      .on("start", clear)
+      .on("brush", updateChart)
+    svg2.call(brush);
   }
+
+  function clear() {
+    brush.move(svg2, null);
+  }
+
+  // Call when Scatterplot1 is brushed 
+  function updateChart(brushEvent) {
+
+    extent = brushEvent.selection;
+
+    myWords.classed("selected", function (d) { return isBrushed(extent, d.x, d.y);})
+
+  }
+
+    //Finds dots within the brushed region
+    function isBrushed(brush_coords, cx, cy) {
+      if (brush_coords === null) return;
+  
+      var x0 = brush_coords[0][0],
+        x1 = brush_coords[1][0],
+        y0 = brush_coords[0][1],
+        y1 = brush_coords[1][1];
+      return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1; // This return TRUE or FALSE depending on if the points is in the selected area
+    }
 });
