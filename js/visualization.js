@@ -6,8 +6,8 @@ const margin = {
     left: 20
   };
 
-const width = 900 - margin.left - margin.right;
-const height = 900 - margin.top - margin.bottom;
+const width = 600 - margin.left - margin.right;
+const height = 600 - margin.top - margin.bottom;
 
 const svg = d3.select("#vis-container")
   .append("svg")
@@ -47,7 +47,6 @@ d3.csv("data/recipe_tot.csv").then(function(data) {
 
     // Find max y 
     let maxY = d3.max(data, (d) => { return parseInt(d[yKey1]); });
-    console.log(maxY);
 
     // Add Y axis
     y = d3.scaleLinear()
@@ -98,6 +97,12 @@ d3.csv("data/recipe_tot.csv").then(function(data) {
         .duration(200)
         .style("opacity", 0)
     }
+
+    const mouseclick = function(event, d) {
+      recipeUrl = "https://www.food.com/recipe/-" + d.id
+      window.open(recipeUrl)
+    }
+
     // Add points
     dot = svg.selectAll("circle")
                         .data(data)
@@ -111,6 +116,7 @@ d3.csv("data/recipe_tot.csv").then(function(data) {
                         .on("mouseover", mouseover )
                         .on("mousemove", mousemove )
                         .on("mouseleave", mouseleave )
+                        .on('click', mouseclick )
 
     // add the options to the button
     dropdownY // Add a button
