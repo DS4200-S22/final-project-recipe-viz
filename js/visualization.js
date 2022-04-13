@@ -7,7 +7,7 @@ const margin = {
   };
 
 const width = 700 - margin.left - margin.right;
-const height = 700 - margin.top - margin.bottom;
+let height = 700 - margin.top - margin.bottom;
 
 const ingredientsObj = {}
 
@@ -34,6 +34,8 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
     // WORDCLOUD
     let clickedIngredients = [];
     let myWords = wordCloud(data);
+
+    let height = 500 - margin.top - margin.bottom;
 
       // append the svg object to the body of the page
     const svg2 = d3.select("#word-cloud").append("svg")
@@ -90,7 +92,7 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
                 d3.select(this).style('fill', '#69b3a2');
                 clickedIngredients.splice(clickedIngredients.indexOf(i.text), 1);
                 d3.selectAll('circle').style("r", (d) => {
-                  if(clickedIngredients.some((ingredient) => d.ingredients.includes(ingredient)) || clickedIngredients.length == 0) {
+                  if(clickedIngredients.every((ingredient) => d.ingredients.includes(ingredient)) || clickedIngredients.length == 0) {
                     return "5px";
                   } else {
                     return "0px";
@@ -100,7 +102,9 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
                 clickedIngredients.push(i.text)
                 d3.select(this).style('fill', '#fc8403');
                 d3.selectAll('circle').style("r", (d) => {
-                  if(clickedIngredients.some((ingredient) => d.ingredients.includes(ingredient)) || clickedIngredients.length == 0) {
+                  console.log(clickedIngredients)
+                  console.log(d.ingredients)
+                  if(clickedIngredients.every((ingredient) => d.ingredients.includes(ingredient)) || clickedIngredients.length == 0) {
                     return "5px";
                   } else {
                     return "0px";
@@ -111,6 +115,8 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
             .on("mouseover", mouseoverWords)
             .on("mouseout", mouseoutWords)
     }
+
+    height = 700 - margin.top - margin.bottom;
 
 
     // SCATTERPLOT
@@ -169,6 +175,7 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
       tooltip
         .html(`Name: ${d['name']}<br>ID: ${d['id']}<br>${xKey1}: ${d[xKey1]}<br>${yKey1}: ${d[yKey1]}`)
         .style("opacity", 1)
+      d3.select(this).style("cursor", "pointer");
     }
 
     const mousemove = function(event, d) {
