@@ -1,4 +1,4 @@
-d3.csv("data/recipe_tot.csv").then(function(data) {
+d3.csv("data/recipe_tot2.csv").then(function(data) {
 
   const margin = {
     top: 80,
