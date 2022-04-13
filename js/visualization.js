@@ -76,6 +76,7 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
         .append("g")
           .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
           .selectAll("text")
+          .attr("id", "wordsClass")
             .data(words)
           .enter().append("text")
             .style("font-size", function(d) { 
@@ -102,8 +103,6 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
                 clickedIngredients.push(i.text)
                 d3.select(this).style('fill', '#fc8403');
                 d3.selectAll('circle').style("r", (d) => {
-                  console.log(clickedIngredients)
-                  console.log(d.ingredients)
                   if(clickedIngredients.every((ingredient) => d.ingredients.includes(ingredient)) || clickedIngredients.length == 0) {
                     return "5px";
                   } else {
@@ -390,4 +389,12 @@ function wordCloud(data) {
   myWords.sort((a, b) => a.size < b.size);
 
   return myWords;
+}
+
+function clearAll() {
+  console.log('hello')
+  // console.log(d3.selectAll('text').style("fill"))
+  d3.selectAll('text').style("fill", "#69b3a2")
+  d3.selectAll('circle').style('r', '5px')
+  clickedIngredients = []
 }
