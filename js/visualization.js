@@ -98,6 +98,11 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
         .duration(200)
         .style("opacity", 0)
     }
+
+    const dotColors = {"breakfast": "#ff87ab", 
+                      "lunch": "#52b788",
+                      "dinner": "#1e6091"}
+
     // Add points
     dot = svg.selectAll("circle")
                         .data(data)
@@ -107,6 +112,7 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
                           .attr("cx", (d) => x(d[xKey1]))
                           .attr("cy", (d) => y(d[yKey1]))
                           .attr("r", 5)
+                          .style("fill", (d => dotColors[d["meal"]]))
                           .style("opacity", 0.5)
                         .on("mouseover", mouseover )
                         .on("mousemove", mousemove )
