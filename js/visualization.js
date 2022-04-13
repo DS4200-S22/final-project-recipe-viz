@@ -6,8 +6,8 @@ const margin = {
     left: 20
   };
 
-const width = 600 - margin.left - margin.right;
-const height = 600 - margin.top - margin.bottom;
+const width = 700 - margin.left - margin.right;
+const height = 700 - margin.top - margin.bottom;
 
 const svg = d3.select("#vis-container")
   .append("svg")
@@ -25,6 +25,7 @@ let x, y
 // Keys are global
 let xKey1, yKey1
 
+
 // Filtering Axes
 d3.csv("data/recipe_tot2.csv").then(function(data) {
     const recipeAttr = ['minutes','n_steps','n_ingredients','calories (kCal)','total fat (g)',
@@ -33,6 +34,35 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
 
     xKey1 = 'minutes'
     yKey1 = 'minutes'
+
+    // add the options to the button
+    let dropdownY = d3.select("#vis-container")
+      .append('select')
+      .attr('id', 'dropY');
+      
+    // add the options to the button
+    dropdownY // Add a button
+      .selectAll('myOptions') // Next 4 lines add 6 options = 6 colors
+        .data(recipeAttr)
+      .enter()
+        .append('option')
+      .text(function (d) { return d; }) // text showed in the menu
+      .attr("value", function (d) { return d; }) // corresponding value returned by the button
+
+    
+    // add the options to the button
+    let dropdownX = d3.select("#vis-container")
+      .append('select')
+      .attr('id', 'dropX');
+
+    // add the options to the button
+    dropdownX // Add a button
+      .selectAll('myOptions') // Next 4 lines add 6 options = 6 colors
+        .data(recipeAttr)
+      .enter()
+        .append('option')
+      .text(function (d) { return d; }) // text showed in the menu
+      .attr("value", function (d) { return d; }) // corresponding value returned by the button
 
     let maxX = d3.max(data, (d) => { return parseInt(d[xKey1]); });
 
@@ -57,10 +87,6 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
                       .attr("transform", `translate(${margin.left}, 0)`) 
                       .call(d3.axisLeft(y));
 
-    // add the options to the button
-    let dropdownY = d3.select("#visbutton")
-      .append('select')
-      .attr('id', 'dropY');
 
     // Add a tooltip div. Here I define the general feature of the tooltip: stuff that do not depend on the data point.
     // Its opacity is set to 0: we don't see it by default.
@@ -75,7 +101,6 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
       .style("padding", "10px")
 
 
-
     // A function that change this tooltip when the user hover a point.
     // Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
     const mouseover = function(event, d) {
@@ -85,7 +110,7 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
 
     const mousemove = function(event, d) {
       tooltip
-        .html(`Name: ${d['name']}<br>ID: ${d['id']}`)
+        .html(`Name: ${d['name']}<br>ID: ${d['id']}<br>${xKey1}: ${d[xKey1]}<br>${yKey1}: ${d[yKey1]}`)
         .style("left", (event.x)/2 + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
         .style("top", (event.y)/2 + "px")
     }
@@ -118,32 +143,11 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
                         .on("mouseleave", mouseleave )
                         .on('click', mouseclick )
 
-    // add the options to the button
-    dropdownY // Add a button
-      .selectAll('myOptions') // Next 4 lines add 6 options = 6 colors
-        .data(recipeAttr)
-      .enter()
-        .append('option')
-      .text(function (d) { return d; }) // text showed in the menu
-      .attr("value", function (d) { return d; }) // corresponding value returned by the button
-
-    
-    // add the options to the button
-    let dropdownX = d3.select("#visbutton")
-      .append('select')
-      .attr('id', 'dropX');
-
-    // add the options to the button
-    dropdownX // Add a button
-      .selectAll('myOptions') // Next 4 lines add 6 options = 6 colors
-        .data(recipeAttr)
-      .enter()
-        .append('option')
-      .text(function (d) { return d; }) // text showed in the menu
-      .attr("value", function (d) { return d; }) // corresponding value returned by the button
 
     // A function that update the chart
     function updateX(selectedGroup) {
+
+      xKey1 = selectedGroup
 
       // Update X axis
       maxX = d3.max(data, (d) => { return parseInt(d[selectedGroup]); });
@@ -161,6 +165,8 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
 
     // A function that update the chart
     function updateY(selectedGroup) {
+
+      yKey1 = selectedGroup
 
       // Update Y axis
       maxY = d3.max(data, (d) => { return parseInt(d[selectedGroup]); });
@@ -195,7 +201,7 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
         updateY(selectedOption)
 
     })
-
+    /*
     // top histogram
     const gTop = svg.append("g")
       .attr("transform",
@@ -290,4 +296,5 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
       })
       .style("fill", "white")
       .style("font", "9px sans-serif");
+      */
 });
