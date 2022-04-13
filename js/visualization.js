@@ -18,6 +18,7 @@ const svg = d3.select("#vis-container")
           `translate(${margin.left}, ${margin.top})`);
 
 let dot
+let title
 
 // Scales are global
 let x, y
@@ -27,6 +28,7 @@ let xKey1, yKey1
 
 // Filtering Axes
 d3.csv("data/recipe_tot.csv").then(function(data) {
+
     const recipeAttr = ['minutes','n_steps','n_ingredients','calories (kCal)','total fat (g)',
                       'sugar (g)','sodium (mg)','protein (g)','saturated fat (g)','carbohydrates (g)'];
 
@@ -136,6 +138,47 @@ d3.csv("data/recipe_tot.csv").then(function(data) {
       .text(function (d) { return d; }) // text showed in the menu
       .attr("value", function (d) { return d; }) // corresponding value returned by the button
 
+    const selectedTextX = d3.select('#axisX option:checked').text();
+    const selectedTextY = d3.select('#axisY option:checked').text();
+
+    title = svg.append("text")
+      .attr("id", "title-text")
+      .attr("x", (width / 2))             
+      .attr("y", 0 - (margin.top / 2))
+      .attr("text-anchor", "middle")  
+      .style("font-size", "16px")
+      .text(`${selectedTextY} vs. ${selectedTextX}`)
+
+    function updateTitleX(newAxisTitle) {
+
+      const selectedTextY = d3.select('#axisY option:checked').text();
+      
+      d3.select('#title-text').remove()
+  
+      title = svg.append("text")
+        .attr("id", "title-text")
+        .attr("x", (width / 2))             
+        .attr("y", 0 - (margin.top / 2))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px")
+        .text(`${selectedTextY} vs. ${newAxisTitle}`)
+    }
+
+    function updateTitleY(newAxisTitle) {
+
+      const selectedTextX = d3.select('#axisX option:checked').text();
+
+      d3.select('#title-text').remove()
+  
+      title = svg.append("text")
+        .attr("id", "title-text")
+        .attr("x", (width / 2))             
+        .attr("y", 0 - (margin.top / 2))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px")
+        .text(`${newAxisTitle} vs. ${selectedTextX}`)
+    }
+
     // A function that update the chart
     function updateX(selectedGroup) {
 
@@ -169,7 +212,7 @@ d3.csv("data/recipe_tot.csv").then(function(data) {
         .duration(1000)
           .attr("cy", d => y(+d[selectedGroup]))
     };
-
+    
     // When the button is changed, run the updateChart function
     d3.select("#dropX").on("change", function(event, d) {
 
@@ -178,6 +221,8 @@ d3.csv("data/recipe_tot.csv").then(function(data) {
 
         // run the updateChart function with this selected option
         updateX(selectedOption)
+
+        updateTitleX(selectedOption)
     })
 
     // When the button is changed, run the updateChart function
@@ -188,6 +233,8 @@ d3.csv("data/recipe_tot.csv").then(function(data) {
 
         // run the updateChart function with this selected option
         updateY(selectedOption)
+
+        updateTitleY(selectedOption)
 
     })
 });
