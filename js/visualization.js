@@ -67,8 +67,9 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
     // Its opacity is set to 0: we don't see it by default.
     const tooltip = d3.select("#vis-container")
       .append("div")
-      .style("opacity", 0)
       .attr("class", "tooltip")
+      .style("position", "absolute")
+      .style("opacity", 0)
       .style("background-color", "white")
       .style("border", "solid")
       .style("border-width", "1px")
@@ -76,19 +77,18 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
       .style("padding", "10px")
 
 
-
     // A function that change this tooltip when the user hover a point.
     // Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
     const mouseover = function(event, d) {
       tooltip
+        .html(`Name: ${d['name']}<br>ID: ${d['id']}<br>${xKey1}: ${d[xKey1]}<br>${yKey1}: ${d[yKey1]}`)
         .style("opacity", 1)
     }
 
     const mousemove = function(event, d) {
       tooltip
-        .html(`Name: ${d['name']}<br>ID: ${d['id']}`)
-        .style("left", (event.x)/2 + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-        .style("top", (event.y)/2 + "px")
+        .style("left", (event.pageX + 5) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+        .style("top", (event.pageY + 10) + "px")
     }
 
     // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
@@ -97,6 +97,11 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
         .transition()
         .duration(200)
         .style("opacity", 0)
+    }
+
+    const mouseclick = function(event, d) {
+      recipeUrl = "https://www.food.com/recipe/-" + d.id
+      window.open(recipeUrl)
     }
 
     const dotColors = {"breakfast": "#ff87ab", 
@@ -117,6 +122,7 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
                         .on("mouseover", mouseover )
                         .on("mousemove", mousemove )
                         .on("mouseleave", mouseleave )
+                        .on("click", mouseclick );
 
     // add the options to the button
     dropdownY // Add a button
@@ -187,6 +193,8 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
     // A function that update the chart
     function updateX(selectedGroup) {
 
+      xKey1 = selectedGroup
+
       // Update X axis
       maxX = d3.max(data, (d) => { return parseInt(d[selectedGroup]); });
       x.domain([0,maxX])
@@ -204,6 +212,8 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
     // A function that update the chart
     function updateY(selectedGroup) {
 
+      yKey1 = selectedGroup
+      
       // Update Y axis
       maxY = d3.max(data, (d) => { return parseInt(d[selectedGroup]); });
       y.domain([0,maxY])
