@@ -26,7 +26,7 @@ let x, y
 let xKey1, yKey1
 
 // Filtering Axes
-d3.csv("data/recipe_tot.csv").then(function(data) {
+d3.csv("data/recipe_tot2.csv").then(function(data) {
     const recipeAttr = ['minutes','n_steps','n_ingredients','calories (kCal)','total fat (g)',
                       'sugar (g)','sodium (mg)','protein (g)','saturated fat (g)','carbohydrates (g)'];
 
