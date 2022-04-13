@@ -9,6 +9,8 @@ const margin = {
 const width = 700 - margin.left - margin.right;
 const height = 700 - margin.top - margin.bottom;
 
+const ingredientsObj = {}
+
 const svg = d3.select("#vis-container")
   .append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -28,6 +30,90 @@ let xKey1, yKey1
 
 // Filtering Axes
 d3.csv("data/recipe_tot2.csv").then(function(data) {
+
+    // WORDCLOUD
+    let clickedIngredients = [];
+    let myWords = wordCloud(data);
+
+      // append the svg object to the body of the page
+    const svg2 = d3.select("#word-cloud").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+    const mouseoverWords = function(d, i) {
+      d3.select(this).style("cursor", "pointer"); 
+      if(d3.select(this).style('fill') != 'rgb(252, 132, 3)') {
+        d3.select(this).style('fill', 'orange');
+      }
+    }
+
+    const mouseoutWords = function(d, i) {
+      if(d3.select(this).style('fill') != 'rgb(252, 132, 3)') {
+        d3.select(this).style('fill', '#69b3a2');
+      }
+    }
+
+    // Constructs a new cloud layout instance. It run an algorithm to find the position of words that suits your requirements
+    // Wordcloud features that are different from one word to the other must be here
+    const layout = d3.layout.cloud()
+    .size([width, height])
+    .words(myWords.map(function(d) { return {text: d.word, size:d.size}; }))
+    .padding(5)        //space between words
+    .rotate(function() { return ~~(Math.random() * 2) * 90; })
+    .fontSize(function(d) { return 2.5*Math.sqrt(d.size); })      // font size of words
+    .on("end", draw);
+    layout.start();
+
+    // This function takes the output of 'layout' above and draw the words
+    // Wordcloud features that are THE SAME from one word to the other can be here
+    function draw(words) {
+      myWords = svg2
+        .append("g")
+          .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+          .selectAll("text")
+            .data(words)
+          .enter().append("text")
+            .style("font-size", function(d) { 
+              return d.size + "px"; 
+            })
+            .style("fill", "#69b3a2")
+            .attr("text-anchor", "middle")
+            .attr("transform", function(d) {
+              return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+            })
+            .text(function(d) { return d.text; })
+            .on("click", function(d, i) {
+              if(d3.select(this).style('fill') == 'rgb(252, 132, 3)') {
+                d3.select(this).style('fill', '#69b3a2');
+                clickedIngredients.splice(clickedIngredients.indexOf(i.text), 1);
+                d3.selectAll('circle').style("r", (d) => {
+                  if(clickedIngredients.some((ingredient) => d.ingredients.includes(ingredient)) || clickedIngredients.length == 0) {
+                    return "5px";
+                  } else {
+                    return "0px";
+                  }
+                })
+              } else {
+                clickedIngredients.push(i.text)
+                d3.select(this).style('fill', '#fc8403');
+                d3.selectAll('circle').style("r", (d) => {
+                  if(clickedIngredients.some((ingredient) => d.ingredients.includes(ingredient)) || clickedIngredients.length == 0) {
+                    return "5px";
+                  } else {
+                    return "0px";
+                  }
+                })
+              }
+            })
+            .on("mouseover", mouseoverWords)
+            .on("mouseout", mouseoutWords)
+    }
+
+
+    // SCATTERPLOT
     const recipeAttr = ['minutes','n_steps','n_ingredients','calories (kCal)','total fat (g)',
                       'sugar (g)','sodium (mg)','protein (g)','saturated fat (g)','carbohydrates (g)'];
 
@@ -113,7 +199,7 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
                         .data(data)
                         .enter()
                           .append("circle")
-                          .attr("id", (d) => d.id)
+                          .attr("id", "circleClass")
                           .attr("cx", (d) => x(d[xKey1]))
                           .attr("cy", (d) => y(d[yKey1]))
                           .attr("r", 5)
@@ -253,3 +339,48 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
 
     })
 });
+
+
+function wordCloud(data) {
+  for (let i = 0; i < data.length; i++) {
+    const ingredientsString = data[i]['ingredients']
+    const cleanedIngredients = ingredientsString.substring(1, ingredientsString.length - 1).split(', ').map((item) => item.substring(1, item.length - 1))
+    
+    cleanedIngredients.forEach((ingredient) => {
+      if(Object.keys(ingredientsObj).includes(ingredient)) {
+        ingredientsObj[ingredient] = ingredientsObj[ingredient] + 1;
+      } else {
+        ingredientsObj[ingredient] = 1;
+      }
+    })
+  }
+
+  Object.keys(ingredientsObj).forEach((ingredient) => {
+    if(ingredientsObj[ingredient] < 10) {
+      delete ingredientsObj[ingredient];
+    }
+  })
+
+  delete ingredientsObj['salt'];
+  delete ingredientsObj['water'];
+  delete ingredientsObj['butter'];
+  delete ingredientsObj['olive oil'];
+  delete ingredientsObj['pepper'];
+
+  ingredientsObj['garlic cloves'] = ingredientsObj['garlic cloves'] + ingredientsObj['garlic']
+  delete ingredientsObj['garlic']
+
+  ingredientsObj['egg'] = ingredientsObj['egg'] + ingredientsObj['eggs']
+  delete ingredientsObj['eggs']
+
+
+  let myWords = []
+  Object.keys(ingredientsObj).forEach((ingredient) => {
+    const wordsObject = {word: ingredient, size: ingredientsObj[ingredient]};
+    myWords.push(wordsObject);
+  })
+
+  myWords.sort((a, b) => a.size < b.size);
+
+  return myWords;
+}
