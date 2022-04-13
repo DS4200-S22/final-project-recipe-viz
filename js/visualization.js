@@ -1,7 +1,7 @@
 // setting parameters
 const margin = {
-    top: 80,
-    right: 80,
+    top: 20,
+    right: 20,
     bottom: 20,
     left: 20
   };
@@ -33,7 +33,7 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
 
 
     xKey1 = 'minutes'
-    yKey1 = 'minutes'
+    yKey1 = 'n_steps'
 
     // add the options to the button
     let dropdownY = d3.select("#vis-container")
@@ -92,8 +92,9 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
     // Its opacity is set to 0: we don't see it by default.
     const tooltip = d3.select("#vis-container")
       .append("div")
-      .style("opacity", 0)
       .attr("class", "tooltip")
+      .style("position", "absolute")
+      .style("opacity", 0)
       .style("background-color", "white")
       .style("border", "solid")
       .style("border-width", "1px")
@@ -105,14 +106,14 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
     // Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
     const mouseover = function(event, d) {
       tooltip
+        .html(`Name: ${d['name']}<br>ID: ${d['id']}<br>${xKey1}: ${d[xKey1]}<br>${yKey1}: ${d[yKey1]}`)
         .style("opacity", 1)
     }
 
     const mousemove = function(event, d) {
       tooltip
-        .html(`Name: ${d['name']}<br>ID: ${d['id']}<br>${xKey1}: ${d[xKey1]}<br>${yKey1}: ${d[yKey1]}`)
-        .style("left", (event.x)/2 + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-        .style("top", (event.y)/2 + "px")
+        .style("left", (event.pageX + 5) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+        .style("top", (event.pageY + 10) + "px")
     }
 
     // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
@@ -136,7 +137,7 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
                           .attr("id", (d) => d.id)
                           .attr("cx", (d) => x(d[xKey1]))
                           .attr("cy", (d) => y(d[yKey1]))
-                          .attr("r", 5)
+                          .attr("r", 3)
                           .style("opacity", 0.5)
                         .on("mouseover", mouseover )
                         .on("mousemove", mousemove )
