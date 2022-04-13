@@ -6,8 +6,8 @@ const margin = {
     left: 20
   };
 
-const width = 900 - margin.left - margin.right;
-const height = 900 - margin.top - margin.bottom;
+const width = 700 - margin.left - margin.right;
+const height = 700 - margin.top - margin.bottom;
 
 const svg = d3.select("#vis-container")
   .append("svg")
@@ -29,7 +29,6 @@ let xKey1, yKey1
 d3.csv("data/recipe_tot.csv").then(function(data) {
     const recipeAttr = ['minutes','n_steps','n_ingredients','calories (kCal)','total fat (g)',
                       'sugar (g)','sodium (mg)','protein (g)','saturated fat (g)','carbohydrates (g)'];
-
 
     xKey1 = 'minutes'
     yKey1 = 'minutes'
@@ -59,9 +58,9 @@ d3.csv("data/recipe_tot.csv").then(function(data) {
                       .call(d3.axisLeft(y));
 
     // add the options to the button
-    let dropdownY = d3.select("#visbutton")
+    let dropdownY = d3.select("#axisY")
       .append('select')
-      .attr('id', 'dropY');
+      .attr('id', 'dropY')
 
     // Add a tooltip div. Here I define the general feature of the tooltip: stuff that do not depend on the data point.
     // Its opacity is set to 0: we don't see it by default.
@@ -123,7 +122,8 @@ d3.csv("data/recipe_tot.csv").then(function(data) {
 
     
     // add the options to the button
-    let dropdownX = d3.select("#visbutton")
+    // let dropdownX = d3.select("#visbuttonX")
+    let dropdownX = d3.select("#axisX")
       .append('select')
       .attr('id', 'dropX');
 
