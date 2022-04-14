@@ -167,6 +167,7 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
       .style("border-width", "1px")
       .style("border-radius", "5px")
       .style("padding", "10px")
+      .style("overflow-y", "scroll");
 
     let isClicked = false;
 
@@ -174,6 +175,7 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
     // A function that change this tooltip when the user hover a point.
     // Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
     const mouseover = function(event, d) {
+<<<<<<< Updated upstream
       tooltip
       .html(`Name: ${d['name']}<br>ID: ${d['id']}<br>${xKey1}: ${d[xKey1]}<br>${yKey1}: ${d[yKey1]}`)
       .style("opacity", 1)
@@ -196,6 +198,36 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
       // reset tooltip state
       tooltip.style('opacity', 0)
       // $(".tooltip").hide()
+=======
+      recipeUrl = "https://www.food.com/recipe/-" + d.id
+
+        tooltip
+        .html(`Name: <a href="recipeUrl">${d['name']}</a><br>ID: ${d['id']}<br>${xKey1}: ${d[xKey1]}<br>${yKey1}: ${d[yKey1]}`)
+        .style("opacity", 1)
+      
+      d3.select(this).style("stroke", "#000000")
+      d3.select(this).style("cursor", "pointer");
+    }
+
+    const mousemove = function(event, d) {
+      tooltip
+        .style("left", (event.pageX + 5) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+        .style("top", (event.pageY + 10) + "px")
+    }
+
+    // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+    const mouseleave = function(event,d) {
+      tooltip
+        .transition()
+        .duration(200)
+        .style("opacity", 0)
+      d3.select(this).style("stroke", "none");
+    }
+
+    const mouseclick = function(event, d) {
+      recipeUrl = "https://www.food.com/recipe/-" + d.id
+      window.open(recipeUrl)
+>>>>>>> Stashed changes
     }
 
     const dotColors = {"breakfast": "#ff87ab", 
@@ -220,6 +252,7 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
                           .style("fill", (d => dotColors[d["meal"]]))
                           .style("opacity", 0.5)
                         .on("mouseover", mouseover )
+<<<<<<< Updated upstream
                         // // .on("mousemove", mousemove )
                         .on("mouseout", mouseleave )
                         // .on("click", mouseclick );
@@ -250,6 +283,11 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
     }
 
 
+=======
+                        .on("mousemove", mousemove )
+                        .on("mouseout", mouseleave )
+                        .on("click", mouseclick )
+>>>>>>> Stashed changes
 
     // add the options to the button
     dropdownY // Add a button
