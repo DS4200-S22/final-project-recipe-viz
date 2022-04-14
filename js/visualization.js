@@ -171,29 +171,71 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
     // A function that change this tooltip when the user hover a point.
     // Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
     const mouseover = function(event, d) {
-      tooltip
+      if (tooltip.style("opacity") == 0) {
+        tooltip
         .html(`Name: ${d['name']}<br>ID: ${d['id']}<br>${xKey1}: ${d[xKey1]}<br>${yKey1}: ${d[yKey1]}`)
         .style("opacity", 1)
+      }
       d3.select(this).style("cursor", "pointer");
     }
 
-    const mousemove = function(event, d) {
-      tooltip
-        .style("left", (event.pageX + 5) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-        .style("top", (event.pageY + 10) + "px")
-    }
+    // const mousemove = function(event, d) {
+    //   tooltip
+    //     .style("left", (event.pageX + 5) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+    //     .style("top", (event.pageY + 10) + "px")
+    // }
 
     // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
     const mouseleave = function(event,d) {
-      tooltip
+      if (!isClicked) {
+        tooltip
         .transition()
         .duration(200)
         .style("opacity", 0)
+      }
     }
 
+    // const mouseoverWords = function(d, i) {
+    //   d3.select(this).style("cursor", "pointer"); 
+    //   if(d3.select(this).style('fill') != 'rgb(252, 132, 3)') {
+    //     d3.select(this).style('fill', 'orange');
+    //   }
+    // }
+
+    // const mouseoutWords = function(d, i) {
+    //   if(d3.select(this).style('fill') != 'rgb(252, 132, 3)') {
+    //     d3.select(this).style('fill', '#69b3a2');
+    //   }
+    // }
+
+    let isClicked = false;
+
     const mouseclick = function(event, d) {
-      recipeUrl = "https://www.food.com/recipe/-" + d.id
-      window.open(recipeUrl)
+      isClicked = !isClicked;
+      
+      if (d3.select(this).style("opacity") == 0) {
+        tooltip
+        .html(`Name: ${d['name']}<br>ID: ${d['id']}<br>${xKey1}: ${d[xKey1]}<br>${yKey1}: ${d[yKey1]}`)
+        .style("opacity", 1)
+      }
+      else if (d3.select(this).style("opacity") == 1) {
+        tooltip
+        .html(`Name: ${d['name']}<br>ID: ${d['id']}<br>${xKey1}: ${d[xKey1]}<br>${yKey1}: ${d[yKey1]}`)
+        .style("opacity", 0)
+      }
+      
+      d3.select(this).style("cursor", "pointer");
+    }
+
+    // global listener
+    d3.select('body').on('click', resetTooltip)
+
+    function resetTooltip() {
+      isClicked = !isClicked
+
+      // reset tooltip state
+      tooltip.style('opacity', 0)
+      // $(".tooltip").hide()
     }
 
     const dotColors = {"breakfast": "#ff87ab", 
@@ -212,7 +254,7 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
                           .style("fill", (d => dotColors[d["meal"]]))
                           .style("opacity", 0.5)
                         .on("mouseover", mouseover )
-                        .on("mousemove", mousemove )
+                        // .on("mousemove", mousemove )
                         .on("mouseleave", mouseleave )
                         .on("click", mouseclick );
 
