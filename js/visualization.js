@@ -21,7 +21,6 @@ const svg = d3.select("#vis-container")
 
 let dot
 let title
-let brush1
 
 // Scales are global
 let x, y
@@ -169,36 +168,10 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
       .style("padding", "10px")
       .style("overflow-y", "scroll");
 
-    let isClicked = false;
-
 
     // A function that change this tooltip when the user hover a point.
     // Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
     const mouseover = function(event, d) {
-<<<<<<< Updated upstream
-      tooltip
-      .html(`Name: ${d['name']}<br>ID: ${d['id']}<br>${xKey1}: ${d[xKey1]}<br>${yKey1}: ${d[yKey1]}`)
-      .style("opacity", 1)
-    }
-
-    // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
-    const mouseleave = function(event,d) {
-      tooltip
-      .transition()
-      .duration(200)
-      .style("opacity", 0)  
-    }
-
-    // global listener
-    d3.select('body').on('click', resetTooltip)
-
-    function resetTooltip() {
-      isClicked = !isClicked
-
-      // reset tooltip state
-      tooltip.style('opacity', 0)
-      // $(".tooltip").hide()
-=======
       recipeUrl = "https://www.food.com/recipe/-" + d.id
 
         tooltip
@@ -224,10 +197,10 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
       d3.select(this).style("stroke", "none");
     }
 
+    const selectedRecipes = []
+
     const mouseclick = function(event, d) {
-      recipeUrl = "https://www.food.com/recipe/-" + d.id
-      window.open(recipeUrl)
->>>>>>> Stashed changes
+      selectedRecipes.push(d)
     }
 
     const dotColors = {"breakfast": "#ff87ab", 
@@ -252,11 +225,9 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
                           .style("fill", (d => dotColors[d["meal"]]))
                           .style("opacity", 0.5)
                         .on("mouseover", mouseover )
-<<<<<<< Updated upstream
-                        // // .on("mousemove", mousemove )
+                        .on("mousemove", mousemove )
                         .on("mouseout", mouseleave )
-                        // .on("click", mouseclick );
-
+                        .on("click", mouseclick )
     function clear() {
       brush1.move(svg, null);
     }
@@ -270,6 +241,17 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
           brushedCircles.push(circle.__data__)
         }
       })
+
+      const info = `<ol>${brushedCircles.map(getRecipeCard)}</ol>`;
+
+      tooltip
+      .html(info)
+      .style("opacity", 1)
+
+    }
+
+    function getRecipeCard (recipe) {
+      return `<li>Name: <a href="recipeUrl">${recipe['name']}</a><br>ID: ${recipe['id']}<br>${xKey1}: ${recipe[xKey1]}<br>${yKey1}: ${recipe[yKey1]}\n</li>`
     }
 
     function isBrushed(brush_coords, cx, cy) {
@@ -281,13 +263,6 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
         y1 = brush_coords[1][1];
       return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1; // This return TRUE or FALSE depending on if the points is in the selected area
     }
-
-
-=======
-                        .on("mousemove", mousemove )
-                        .on("mouseout", mouseleave )
-                        .on("click", mouseclick )
->>>>>>> Stashed changes
 
     // add the options to the button
     dropdownY // Add a button
