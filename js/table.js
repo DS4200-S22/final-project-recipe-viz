@@ -30,6 +30,7 @@ d3.csv("../data/recipe_tot2.csv").then((data) => {
 
     // create a row for each object in the data
     function addData(data, col) {
+        d3.selectAll("#table_of_items tbody tr").remove()
         rows = tbody.selectAll("tr")
                   .data(data)
                   .enter()
