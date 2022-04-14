@@ -237,7 +237,7 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
 
       brushedCircles = []
       d3.selectAll('circle')._groups[0].forEach(circle => {
-        if(isBrushed(extent, circle.cx.baseVal.value, circle.cy.baseVal.value)) {
+        if(isBrushed(extent, circle.cx.baseVal.value, circle.cy.baseVal.value) && circle.style.r!='0px') {
           brushedCircles.push(circle.__data__)
         }
       })
