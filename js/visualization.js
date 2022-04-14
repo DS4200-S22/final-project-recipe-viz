@@ -21,6 +21,7 @@ const svg = d3.select("#vis-container")
 
 let dot
 let title
+let selectedRecipes
 
 // Scales are global
 let x, y
@@ -138,7 +139,6 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
 
     // Find max y 
     let maxY = d3.max(data, (d) => { return parseInt(d[yKey1]); });
-    console.log(maxY);
 
     // Add Y axis
     y = d3.scaleLinear()
@@ -166,14 +166,19 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
       .style("border-width", "1px")
       .style("border-radius", "5px")
       .style("padding", "10px")
+      .style("overflow-y", "scroll");
 
 
     // A function that change this tooltip when the user hover a point.
     // Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
     const mouseover = function(event, d) {
-      tooltip
-        .html(`Name: ${d['name']}<br>ID: ${d['id']}<br>${xKey1}: ${d[xKey1]}<br>${yKey1}: ${d[yKey1]}`)
+      recipeUrl = "https://www.food.com/recipe/-" + d.id
+
+        tooltip
+        .html(`Name: <a href="recipeUrl">${d['name']}</a><br>ID: ${d['id']}<br>${xKey1}: ${d[xKey1]}<br>${yKey1}: ${d[yKey1]}`)
         .style("opacity", 1)
+      
+      d3.select(this).style("stroke", "#000000")
       d3.select(this).style("cursor", "pointer");
     }
 
@@ -189,16 +194,24 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
         .transition()
         .duration(200)
         .style("opacity", 0)
+      d3.select(this).style("stroke", "none");
     }
 
+    selectedRecipes = [];
     const mouseclick = function(event, d) {
-      recipeUrl = "https://www.food.com/recipe/-" + d.id
-      window.open(recipeUrl)
+      selectedRecipes.push(d)
+      addData(selectedRecipes, xKey1);
     }
 
     const dotColors = {"breakfast": "#ff87ab", 
                       "lunch": "#52b788",
                       "dinner": "#1e6091"}
+
+    brush1 = d3.brush()
+    .extent([[0, 0], [width, height]])
+    .on("start", clear)
+    .on("brush", updatePlot)
+    svg.call(brush1);
 
     // Add points
     dot = svg.selectAll("circle")
@@ -213,8 +226,46 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
                           .style("opacity", 0.5)
                         .on("mouseover", mouseover )
                         .on("mousemove", mousemove )
-                        .on("mouseleave", mouseleave )
-                        .on("click", mouseclick );
+                        .on("mouseout", mouseleave )
+                        .on("click", mouseclick )
+    function clear() {
+      brush1.move(svg, null);
+    }
+
+    function updatePlot(brushEvent) {
+      extent = brushEvent.selection;
+
+      brushedCircles = []
+      d3.selectAll('circle')._groups[0].forEach(circle => {
+        if(isBrushed(extent, circle.cx.baseVal.value, circle.cy.baseVal.value)) {
+          brushedCircles.push(circle.__data__)
+        }
+      })
+
+      const info = `<ol>${brushedCircles.map(getRecipeCard)}</ol>`;
+
+      tooltip
+        .html(info)
+        .style("opacity", 1)
+        .style("height", "200px")
+
+    }
+
+    function getRecipeCard (recipe) {
+      recipeUrl = "https://www.food.com/recipe/-" + recipe.id
+
+      return `<li>Name: <a href="${recipeUrl}" target="_blank">${recipe['name']}</a><br>ID: ${recipe['id']}<br>${xKey1}: ${recipe[xKey1]}<br>${yKey1}: ${recipe[yKey1]}\n</li>`
+    }
+
+    function isBrushed(brush_coords, cx, cy) {
+      if (brush_coords === null) return;
+  
+      var x0 = brush_coords[0][0],
+        x1 = brush_coords[1][0],
+        y0 = brush_coords[0][1],
+        y1 = brush_coords[1][1];
+      return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1; // This return TRUE or FALSE depending on if the points is in the selected area
+    }
 
     // add the options to the button
     dropdownY // Add a button
@@ -309,7 +360,6 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
       // Update Y axis
       maxY = d3.max(data, (d) => { return parseInt(d[selectedGroup]); });
       y.domain([0,maxY])
-      console.log(maxY);
       yAxis.transition().duration(1000).call(d3.axisLeft(y))
 
       // Give these new data to update dot
@@ -344,6 +394,69 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
         updateTitleY(selectedOption)
 
     })
+
+
+    // TABLE
+    // the columns you'd like to display
+    let columns = [
+        "name", "minutes","calories (kCal)","total fat (g)",
+        "sugar (g)","sodium (mg)","protein (g)","saturated fat (g)",
+        "carbohydrates (g)","rating",
+    ];
+
+    data.forEach(function(d){
+    for (let i = 0; i < columns.length; i++) {
+        if (columns[i] === "name") { continue; } 
+        d[columns[i]] = +d[columns[i]]; };
+    });
+
+    let table = d3.select("#recipe-table").append("table").attr("id", "table_of_items");
+    thead = table.append("thead"),
+    tbody = table.append("tbody");
+
+    // append the header row
+    thead.append("tr")
+        .selectAll("th")
+        .data(columns)
+        .enter()
+        .append("th")
+        .text(function (column) {
+          return column;
+        })
+
+    // create a row for each object in the data
+    function addData(data, col) {
+        rows = tbody.selectAll("tr")
+                  .data(data)
+                  .enter()
+                  .append("tr")
+                    .on("click", function(event, d) {
+                          recipeUrl = "https://www.food.com/recipe/-" + d.id
+                          window.open(recipeUrl)
+                      });
+
+        // create a cell in each row for each column
+        cells = rows.selectAll("td")
+                  .data(function (row) {
+                    return columns.map(function (column) {
+                      return { column: column, value: row[column] };
+                    });
+                  })
+                  .enter()
+                  .append("td")
+                  .text(function (d) {
+                    return d.value;
+                  });
+        sortTable(col)
+    }
+
+    function sortTable(col) {
+        table.selectAll("tbody tr") 
+            .sort(function(a, b) {
+                    return d3.descending(a[col], b[col]);
+            });
+        }
+
 });
 
 
@@ -392,9 +505,15 @@ function wordCloud(data) {
 }
 
 function clearAll() {
-  console.log('hello')
   // console.log(d3.selectAll('text').style("fill"))
   d3.selectAll('text').style("fill", "#69b3a2")
   d3.selectAll('circle').style('r', '5px')
   clickedIngredients = []
 }
+
+function clearTable(){
+    d3.selectAll("#table_of_items tbody tr").remove()
+    for (let i = selectedRecipes.length; i>0; i--) {
+      selectedRecipes.pop()
+    };
+};
