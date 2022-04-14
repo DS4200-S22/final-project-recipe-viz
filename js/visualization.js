@@ -245,13 +245,16 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
       const info = `<ol>${brushedCircles.map(getRecipeCard)}</ol>`;
 
       tooltip
-      .html(info)
-      .style("opacity", 1)
+        .html(info)
+        .style("opacity", 1)
+        .style("height", "200px")
 
     }
 
     function getRecipeCard (recipe) {
-      return `<li>Name: <a href="recipeUrl">${recipe['name']}</a><br>ID: ${recipe['id']}<br>${xKey1}: ${recipe[xKey1]}<br>${yKey1}: ${recipe[yKey1]}\n</li>`
+      recipeUrl = "https://www.food.com/recipe/-" + recipe.id
+
+      return `<li>Name: <a href="${recipeUrl}" target="_blank">${recipe['name']}</a><br>ID: ${recipe['id']}<br>${xKey1}: ${recipe[xKey1]}<br>${yKey1}: ${recipe[yKey1]}\n</li>`
     }
 
     function isBrushed(brush_coords, cx, cy) {
