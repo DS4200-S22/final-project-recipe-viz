@@ -21,6 +21,7 @@ const svg = d3.select("#vis-container")
 
 let dot
 let title
+let brush1
 
 // Scales are global
 let x, y
@@ -167,64 +168,23 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
       .style("border-radius", "5px")
       .style("padding", "10px")
 
+    let isClicked = false;
+
 
     // A function that change this tooltip when the user hover a point.
     // Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
     const mouseover = function(event, d) {
-      if (tooltip.style("opacity") == 0) {
-        tooltip
-        .html(`Name: ${d['name']}<br>ID: ${d['id']}<br>${xKey1}: ${d[xKey1]}<br>${yKey1}: ${d[yKey1]}`)
-        .style("opacity", 1)
-      }
-      d3.select(this).style("cursor", "pointer");
+      tooltip
+      .html(`Name: ${d['name']}<br>ID: ${d['id']}<br>${xKey1}: ${d[xKey1]}<br>${yKey1}: ${d[yKey1]}`)
+      .style("opacity", 1)
     }
-
-    // const mousemove = function(event, d) {
-    //   tooltip
-    //     .style("left", (event.pageX + 5) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-    //     .style("top", (event.pageY + 10) + "px")
-    // }
 
     // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
     const mouseleave = function(event,d) {
-      if (!isClicked) {
-        tooltip
-        .transition()
-        .duration(200)
-        .style("opacity", 0)
-      }
-    }
-
-    // const mouseoverWords = function(d, i) {
-    //   d3.select(this).style("cursor", "pointer"); 
-    //   if(d3.select(this).style('fill') != 'rgb(252, 132, 3)') {
-    //     d3.select(this).style('fill', 'orange');
-    //   }
-    // }
-
-    // const mouseoutWords = function(d, i) {
-    //   if(d3.select(this).style('fill') != 'rgb(252, 132, 3)') {
-    //     d3.select(this).style('fill', '#69b3a2');
-    //   }
-    // }
-
-    let isClicked = false;
-
-    const mouseclick = function(event, d) {
-      isClicked = !isClicked;
-      
-      if (d3.select(this).style("opacity") == 0) {
-        tooltip
-        .html(`Name: ${d['name']}<br>ID: ${d['id']}<br>${xKey1}: ${d[xKey1]}<br>${yKey1}: ${d[yKey1]}`)
-        .style("opacity", 1)
-      }
-      else if (d3.select(this).style("opacity") == 1) {
-        tooltip
-        .html(`Name: ${d['name']}<br>ID: ${d['id']}<br>${xKey1}: ${d[xKey1]}<br>${yKey1}: ${d[yKey1]}`)
-        .style("opacity", 0)
-      }
-      
-      d3.select(this).style("cursor", "pointer");
+      tooltip
+      .transition()
+      .duration(200)
+      .style("opacity", 0)  
     }
 
     // global listener
@@ -242,6 +202,12 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
                       "lunch": "#52b788",
                       "dinner": "#1e6091"}
 
+    brush1 = d3.brush()
+    .extent([[0, 0], [width, height]])
+    .on("start", clear)
+    .on("brush", updatePlot)
+    svg.call(brush1);
+
     // Add points
     dot = svg.selectAll("circle")
                         .data(data)
@@ -254,9 +220,36 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
                           .style("fill", (d => dotColors[d["meal"]]))
                           .style("opacity", 0.5)
                         .on("mouseover", mouseover )
-                        // .on("mousemove", mousemove )
-                        .on("mouseleave", mouseleave )
-                        .on("click", mouseclick );
+                        // // .on("mousemove", mousemove )
+                        .on("mouseout", mouseleave )
+                        // .on("click", mouseclick );
+
+    function clear() {
+      brush1.move(svg, null);
+    }
+
+    function updatePlot(brushEvent) {
+      extent = brushEvent.selection;
+
+      brushedCircles = []
+      d3.selectAll('circle')._groups[0].forEach(circle => {
+        if(isBrushed(extent, circle.cx.baseVal.value, circle.cy.baseVal.value)) {
+          brushedCircles.push(circle.__data__)
+        }
+      })
+    }
+
+    function isBrushed(brush_coords, cx, cy) {
+      if (brush_coords === null) return;
+  
+      var x0 = brush_coords[0][0],
+        x1 = brush_coords[1][0],
+        y0 = brush_coords[0][1],
+        y1 = brush_coords[1][1];
+      return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1; // This return TRUE or FALSE depending on if the points is in the selected area
+    }
+
+
 
     // add the options to the button
     dropdownY // Add a button
