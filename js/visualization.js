@@ -149,7 +149,6 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
                       .attr("transform", `translate(${margin.left}, 0)`) 
                       .call(d3.axisLeft(y));
 
-
     // add the options to the button
     let dropdownY = d3.select("#axisY")
       .append('select')
@@ -201,9 +200,6 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
                       "lunch": "#52b788",
                       "dinner": "#1e6091"}
 
-    const dotMeal = Object.keys(dotColors);
-    const mealColor = Object.values(dotColors);
-
     // Add points
     dot = svg.selectAll("circle")
                         .data(data)
@@ -219,24 +215,6 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
                         .on("mousemove", mousemove )
                         .on("mouseleave", mouseleave )
                         .on("click", mouseclick );
-
-    svg.selectAll("legendSymbols")
-        .data(dotMeal)
-        .enter()
-        .append("circle")
-        .attr("cx", width - margin.right - 200)
-        .attr("cy", (d, i) => 150 + i * 25)
-        .attr("r", 5)
-        .attr("fill", (d, i) => mealColor[i])
-
-     svg.selectAll("legendTexts")
-        .data(dotMeal)
-        .enter()
-        .append("text")
-        .text((d) => d)
-        .attr("x", width - margin.right - 200 + 15)
-        .attr("y", (d, i) => 150 + i * 25 + 5)
-        .attr("class", "textbox")              
 
     // add the options to the button
     dropdownY // Add a button

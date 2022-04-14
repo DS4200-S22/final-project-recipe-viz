@@ -14,7 +14,7 @@ d3.csv("../data/recipe_tot2.csv").then((data) => {
         d[columns[i]] = +d[columns[i]]; };
     });
 
-    let table = d3.select("#recipe-table").append("table"),
+    let table = d3.select("#recipe-table").append("table").attr("id", "table_of_items");
     thead = table.append("thead"),
     tbody = table.append("tbody");
 
@@ -29,7 +29,7 @@ d3.csv("../data/recipe_tot2.csv").then((data) => {
         })
 
     // create a row for each object in the data
-    function addData(data) {
+    function addData(data, col) {
         rows = tbody.selectAll("tr")
                   .data(data)
                   .enter()
@@ -51,6 +51,7 @@ d3.csv("../data/recipe_tot2.csv").then((data) => {
                   .text(function (d) {
                     return d.value;
                   });
+        sortTable(col)
     }
 
     function sortTable(col) {
@@ -60,6 +61,10 @@ d3.csv("../data/recipe_tot2.csv").then((data) => {
             });
         }
 
-    addData(data);
+    addData(data, "minutes");
     sortTable("minutes")
 });
+
+function clearTable(){
+    d3.selectAll("#table_of_items tbody tr").remove();
+};
