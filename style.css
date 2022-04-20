@@ -19,6 +19,11 @@ h3 {
   margin: 40px auto;
 }
 
+#legend {
+    opacity: 0.2;
+    fill: #2c3e50;
+}
+
 .vis-y-axis {
   display: flex;
   align-items: center;
@@ -48,7 +53,39 @@ h3 {
   padding-right: 10px;
 }
 
+<<<<<<< HEAD
 .selected {
   stroke: black;
   stroke-width: 3;
 }
+=======
+
+th, td {
+    border-bottom: 1px solid #CCC;
+    padding: 10px;
+}
+
+thead th {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: hsl(20, 50%, 70%);
+}
+
+tbody {
+  overflow: scroll;
+  height: 20px;
+}
+
+.table-container {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin-top: 20px;
+    border: 1px solid #CCC;
+    border-radius: 4px;
+    max-height: 500px;
+    overflow-y: scroll;
+}
+>>>>>>> origin/main
