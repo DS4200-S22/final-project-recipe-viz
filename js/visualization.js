@@ -6,8 +6,8 @@ const margin = {
     left: 20
   };
 
-const width = 700 - margin.left - margin.right;
-let height = 700 - margin.top - margin.bottom;
+const width = 600 - margin.left - margin.right;
+let height = 600 - margin.top - margin.bottom;
 
 const ingredientsObj = {}
 
@@ -116,7 +116,7 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
             .on("mouseout", mouseoutWords)
     }
 
-    height = 700 - margin.top - margin.bottom;
+    height = 600 - margin.top - margin.bottom;
 
 
     // SCATTERPLOT
@@ -206,6 +206,33 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
     const dotColors = {"breakfast": "#ff87ab", 
                       "lunch": "#52b788",
                       "dinner": "#1e6091"}
+
+    //make color as re the possible domain
+    const color = d3.scaleOrdinal()
+            .domain(Object.keys(dotColors))
+            .range(Object.values(dotColors));
+
+    let legend = d3.select('#legend').append("svg").selectAll(".legend")
+         .data(Object.keys(dotColors))
+            .enter().append("g")
+         .attr("class", "legend")
+         .attr("y", 300)
+         .attr("transform", function(d, i) { return "translate(-270," + (i+2) * 20 + ")"; });
+
+    // draw legend colored rectangles
+    legend.append("rect")
+         .attr("x", width - 18)
+         .attr("width", 18)
+         .attr("height", 18)
+         .style("fill", function(d){return color(d)});
+
+    // draw legend text
+    legend.append("text")
+         .attr("x", width - 24)
+         .attr("y", 9)
+         .attr("dy", ".35em")
+         .style("text-anchor", "end")
+         .text(function(d) { return d;});    
 
     brush1 = d3.brush()
     .extent([[0, 0], [width, height]])

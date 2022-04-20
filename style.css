@@ -19,11 +19,6 @@ h3 {
   margin: 40px auto;
 }
 
-#legend {
-    opacity: 0.2;
-    fill: #2c3e50;
-}
-
 .vis-y-axis {
   display: flex;
   align-items: center;
@@ -55,7 +50,7 @@ h3 {
 }
 
 #axisX {
-  width: 130px;
+  width: 20px;
   height: 20px;
 }
 
@@ -63,6 +58,8 @@ h3 {
   width: 130px;
   height: 20px;
   padding-right: 10px;
+  margin-left: auto;
+  margin-right: 0;
 }
 
 #title-vis {
