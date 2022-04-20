@@ -1,7 +1,7 @@
 // setting parameters
 const margin = {
-    top: 80,
-    right: 80,
+    top: 20,
+    right: 20,
     bottom: 20,
     left: 20
   };
@@ -254,7 +254,9 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
     function getRecipeCard (recipe) {
       recipeUrl = "https://www.food.com/recipe/-" + recipe.id
 
-      return `<li>Name: <a href="${recipeUrl}" target="_blank">${recipe['name']}</a><br>ID: ${recipe['id']}<br>${xKey1}: ${recipe[xKey1]}<br>${yKey1}: ${recipe[yKey1]}\n</li>`
+      return `<li>Name: <a href="${recipeUrl}" target="_blank">${recipe['name']}</a>
+              <br>ID: ${recipe['id']}<br>${xKey1}: ${recipe[xKey1]}
+              <br>${yKey1}: ${recipe[yKey1]}\n</li>`
     }
 
     function isBrushed(brush_coords, cx, cy) {
@@ -295,13 +297,13 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
     const selectedTextX = d3.select('#axisX option:checked').text();
     const selectedTextY = d3.select('#axisY option:checked').text();
 
-    title = svg.append("text")
+    title = d3.select("#title-vis").append("text")
       .attr("id", "title-text")
       .attr("x", (width / 2))             
       .attr("y", 0 - (margin.top / 2))
       .attr("text-anchor", "middle")  
-      .style("font-size", "16px")
       .text(`${selectedTextY} vs. ${selectedTextX}`)
+
 
     function updateTitleX(newAxisTitle) {
 
@@ -309,12 +311,11 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
       
       d3.select('#title-text').remove()
   
-      title = svg.append("text")
+      title = d3.select("#title-vis").append("text")
         .attr("id", "title-text")
         .attr("x", (width / 2))             
         .attr("y", 0 - (margin.top / 2))
-        .attr("text-anchor", "middle")  
-        .style("font-size", "16px")
+        .attr("text-anchor", "middle")
         .text(`${selectedTextY} vs. ${newAxisTitle}`)
     }
 
@@ -324,12 +325,11 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
 
       d3.select('#title-text').remove()
   
-      title = svg.append("text")
+      title = d3.select("#title-vis").append("text")
         .attr("id", "title-text")
         .attr("x", (width / 2))             
         .attr("y", 0 - (margin.top / 2))
-        .attr("text-anchor", "middle")  
-        .style("font-size", "16px")
+        .attr("text-anchor", "middle")
         .text(`${newAxisTitle} vs. ${selectedTextX}`)
     }
 
