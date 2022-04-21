@@ -78,36 +78,63 @@
   </video>
 
   <h1>Visualization Explanation</h1>
-  
+
+  <a href='https://docs.google.com/presentation/d/1lgwPyNb-whKegs7tR1vdqfeKEPBMsTpaG7rBa37MsXU/edit?usp=sharing'>
+    Presentation Slides</a>  
+
   <p>
-    Replace with an explanation of your visualization and linked presentation slides. <strong>Be sure to delete this filler text before your final submission!</strong>
+    The visualization above primarily uses a scatterplot as well as a word cloud. Users are able to pick 2 different measures out of number of minutes, protein, calories, total fats, sodium, saturated fat, carbohydrates, and number of steps to create the scatterplot. The scatterplot shows the data color-coded by meal type (breakfast, lunch, dinner, dessert, drinks, snacks) and the frame of the plot is constrained to show a certain maximum number of data so that users are not overwhelmed. Upon hovering over data points, a card for the recipe will appear, showing its name and information about it. Within the scatterplot, users also have the ability to brush over areas of points, creating a compiled list of all the recipes in that brushed region. This visualization also contains a word cloud to help users discover recipes based on specific ingredients. Users can select ingredients in the word cloud, which will filter the recipes on the scatterplot so only recipes that contain the selected ingredients will be shown. Users also have the ability to save recipes in a table by clicking on the recipe's corresponding data point. This allows the recipe to be saved and for the user to see all the information about it. Through the scatterplot as well as the word cloud, the user is able to make recipe finding more easy and efficient. 
   </p>
   
   <h1>Acknowledgments</h1>
 
-  <p>
-    Add to think list citations for any code, packages/libraries, text, images, designs, etc. that you leveraged. <strong>Be sure to delete this filler text before your final submission!</strong>
-  </p>
-
   <ul>
     <li><a href='https://d3js.org/'>
       D3: Data-Driven Documents</a>
-      by Mike Bostock is used for manipulating the DOM to create visualizations.
+      by Mike Bostock was used for manipulating the DOM to create visualizations.
     </li>
     <li><a href='https://codepo8.github.io/css-fork-on-github-ribbon/#'>
       Pure CSS responsive 'Fork me on GitHub' ribbon</a>
-      by Chris Heilmann is used to create the banner that links back to the source code repository.
+      by Chris Heilmann was used to create the banner that links back to the source code repository.
     </li>
     <li><a href='https://github.com/NEU-DS-4200-F20-Staff/Project'>
       Project</a>
-      by Cody Dunne is used to create this assignment.
+      by Cody Dunne was used to create this assignment.
     </li>
     <li><a href='https://github.com/jasondavies/d3-cloud'>
       Word Cloud Layout</a>
-      by Jason Davies is used to create the word cloud visualization
+      by Jason Davies was used to create the word cloud visualization
     <li><a href='https://russelllim22.medium.com/bar-chart-with-word-cloud-filled-bars-695947f35874'>
       Bar Chart with Word Cloud Filled Bars</a>
-      by Russell Lim is used to modify the word cloud visualization
+      by Russell Lim was used to modify the word cloud visualization
+    </li>
+    <li><a href='https://stackoverflow.com/questions/38670322/d3-brushing-and-mouse-move-coexist'>
+      D3 brushing and mouse move coexist</a> and
+      <a href='http://wrobstory.github.io/2013/11/D3-brush-and-tooltip.html'>
+        Cooperative Brushing and Tooltips in D3</a>
+        were used to implement brushing on the scatterplot
+    </li>
+    <li><a href='https://stackoverflow.com/questions/27586566/remove-stroke-border-from-svg-within-html-css-js-web-app'>
+      Remove Stroke Border from SVG within HTML/CSS/JS Web App</a> 
+      was used to style the datapoints on hover
+    </li>
+    <li><a href='https://stackoverflow.com/questions/38541966/prevent-mouseout-action-after-click-on-an-element-with-d3-js'> 
+      Prevent mouseout action after click on an element with D3.js</a> and 
+      <a href='https://stackoverflow.com/questions/58316273/remove-d3-tooltip-onclick'>
+        Remove d3 tooltip onclick</a>
+      were used to implement the tooltip hover mechanism
+    </li>
+    <li><a href='https://css-tricks.com/snippets/css/a-guide-to-flexbox/'> 
+      A Complete Guide to Flexbox</a>, 
+      <a href='https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox'>
+        Flexbox</a>, and 
+        <a href='https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox'>
+          Basic concepts of flexbox</a>
+      were used to design the flexbox layout of the visualization section, especially the scatterplot
+    </li>
+    <li><a href='https://www.w3schools.com/howto/howto_css_dropdown.asp'>
+      How TO - Hoverable Dropdown</a> 
+      was used to implement the dropdown features on the scatterplot axes
     </li>
   </ul>
 </div>
