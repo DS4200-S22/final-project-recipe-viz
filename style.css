@@ -71,9 +71,10 @@ h3 {
   font-size: 22px;
 }
 
-th, td {
-    border-bottom: 1px solid #CCC;
-    padding: 10px;
+th,
+td {
+  border-bottom: 1px solid #ccc;
+  padding: 10px;
 }
 
 thead th {
@@ -82,7 +83,7 @@ thead th {
   top: 0;
   z-index: 2;
   background: hsl(166, 33%, 56%);
-  color:#FFFFFF;
+  color: #ffffff;
 }
 
 tbody {
@@ -91,24 +92,21 @@ tbody {
 }
 
 .table-container {
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-    margin-top: 20px;
-    border: 1px solid #CCC;
-    border-radius: 4px;
-    max-height: 500px;
-    overflow-y: scroll;
-<<<<<<< HEAD
-}
-=======
-    max-width: 65%;
-    margin: 40px auto;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  max-height: 500px;
+  overflow-y: scroll;
+  max-width: 65%;
+  margin: 40px auto;
 }
 
 .button-container {
-    max-width: 65%;
-    margin: 40px auto;
+  max-width: 65%;
+  margin: 40px auto;
 }
 
 .legend {
@@ -116,30 +114,29 @@ tbody {
   margin-right: 0;
 }
 
-button{
-  display:inline-block;
-  padding:0.2em 1.45em;
-  margin:0.1em;
-  border:0.15em solid #CCCCCC;
+button {
+  display: inline-block;
+  padding: 0.2em 1.45em;
+  margin: 0.1em;
+  border: 0.15em solid #cccccc;
   box-sizing: border-box;
-  text-decoration:none;
-  font-family:'Arial',sans-serif;
-  font-weight:500;
-  color:#000000;
-  background-color:#CCCCCC;
-  text-align:center;
-  position:relative;
+  text-decoration: none;
+  font-family: "Arial", sans-serif;
+  font-weight: 500;
+  color: #000000;
+  background-color: #cccccc;
+  text-align: center;
+  position: relative;
 }
-button:hover{
-  border-color:#7a7a7a;
+button:hover {
+  border-color: #7a7a7a;
 }
-button:active{
-  background-color:#999999;
+button:active {
+  background-color: #999999;
 }
-@media all and (max-width:30em){
-  button{
-    display:block;
-    margin:0.2em auto;
+@media all and (max-width: 30em) {
+  button {
+    display: block;
+    margin: 0.2em auto;
   }
 }
->>>>>>> origin/main
