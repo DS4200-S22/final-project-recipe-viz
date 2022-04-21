@@ -273,10 +273,12 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
 
       const info = `<ol>${brushedCircles.map(getRecipeCard)}</ol>`;
 
-      tooltip
-        .html(info)
-        .style("opacity", 1)
-        .style("height", "200px")
+      if (brushedCircles.length != 0) {
+        tooltip
+          .html(info)
+          .style("opacity", 1)
+          .style("height", "200px")
+      }
 
     }
 
