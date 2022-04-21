@@ -40,23 +40,33 @@
     <p>
       Many factors contribute to the difficulty of choosing a recipe to cook, such as the overwhelming variety of ingredients that are used, the nutritional value of the meal, and the number of steps that it takes to make the meal. Visualizing the different recipes that are available to users by first filtering by specific ingredients and next ordering them by health and simplicity allows them to quickly scan which recipes are the most relevant to them, resulting in an optimal cooking experience.</strong>
     </p>
+    <h1>Visualization</h1>
 </div>
-<div class='content-column'>
-  <!-- Visualization -->   
-  <h1>Visualization</h1>
-  
-  <div class='vis-x-axis'>
-    <div class='vis-y-axis'>
-      <div class='vis-holder' id="axisY"></div> 
-      <div class='vis-holder' id="vis-container"></div>
-    </div>
-    <div class='vis-holder' id="axisX"></div> 
-  </div> 
-  <div class='vis-holder' id="word-cloud"></div>
-  <button type="button" onclick="clearAll()">Clear all ingredients</button>
-  <div class='table-container' id="recipe-table"></div>
-  <button type="button" onclick="clearTable()">Clear all saved recipes</button>
 
+<div id="title-vis">
+</div>
+<div class='content-vis'>
+  <!-- Visualization -->   
+  <div class="vis-group">
+    <div class='vis-x-axis'>
+      <div class='vis-y-axis'>
+        <div id="legendaxis">
+          <div class='vis-holder' id="axisY"></div> 
+          <div id="legend"></div>
+        </div>
+        <div class='vis-holder' id="vis-container"></div>
+      </div>
+      <div class='vis-holder' id="axisX"></div> 
+    </div> 
+    <div class="word-cloud-group">
+      <div class='vis-holder' id="word-cloud"></div>
+      <button type="button" onclick="clearAll()">Clear all ingredients</button>
+    </div>
+  </div>
+  <div class='table-container' id="recipe-table"></div>
+  <div class='button-container'>
+    <button type="button" onclick="clearTable()">Clear all saved recipes</button>
+  </div>
 
 </div>
  
@@ -133,7 +143,9 @@
       were used to design the flexbox layout of the visualization section, especially the scatterplot
     </li>
     <li><a href='https://www.w3schools.com/howto/howto_css_dropdown.asp'>
-      How TO - Hoverable Dropdown</a> 
+      How TO - Hoverable Dropdown</a> and
+      <a href='https://d3-graph-gallery.com/graph/connectedscatter_select.html'>
+      Connected scatter plot with dropdown to select group</a>
       was used to implement the dropdown features on the scatterplot axes
     </li>
   </ul>
