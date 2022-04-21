@@ -71,7 +71,6 @@ h3 {
   font-size: 22px;
 }
 
-
 th, td {
     border-bottom: 1px solid #CCC;
     padding: 10px;
@@ -100,6 +99,9 @@ tbody {
     border-radius: 4px;
     max-height: 500px;
     overflow-y: scroll;
+<<<<<<< HEAD
+}
+=======
     max-width: 65%;
     margin: 40px auto;
 }
@@ -140,3 +142,4 @@ button:active{
     margin:0.2em auto;
   }
 }
+>>>>>>> origin/main
