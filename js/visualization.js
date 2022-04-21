@@ -212,23 +212,25 @@ d3.csv("data/recipe_tot2.csv").then(function(data) {
             .domain(Object.keys(dotColors))
             .range(Object.values(dotColors));
 
-    let legend = d3.select('#legend').append("svg").selectAll(".legend")
+    let legend = d3.select('#legend').append("svg")
+                      .attr("width", 140)
+                      .attr("height", 100)
+                        .selectAll(".legend")
          .data(Object.keys(dotColors))
             .enter().append("g")
          .attr("class", "legend")
-         .attr("y", 300)
-         .attr("transform", function(d, i) { return "translate(-270," + (i+2) * 20 + ")"; });
+         .attr("transform", function(d, i) { return "translate(0," + (i+2) * 20 + ")"; });
 
     // draw legend colored rectangles
     legend.append("rect")
-         .attr("x", width - 18)
+         .attr("x", 140-18)
          .attr("width", 18)
          .attr("height", 18)
          .style("fill", function(d){return color(d)});
 
     // draw legend text
     legend.append("text")
-         .attr("x", width - 24)
+         .attr("x", 140 - 24)
          .attr("y", 9)
          .attr("dy", ".35em")
          .style("text-anchor", "end")

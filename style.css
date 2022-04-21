@@ -109,6 +109,11 @@ tbody {
     margin: 40px auto;
 }
 
+.legend {
+  margin-left: auto;
+  margin-right: 0;
+}
+
 button{
   display:inline-block;
   padding:0.2em 1.45em;
