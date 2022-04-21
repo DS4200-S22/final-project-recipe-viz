@@ -1,0 +1,145 @@
+WEBVTT
+Kind: captions
+Language: en-US
+
+00:00:00.000 --> 00:00:02.000
+hi, this is the demo video for
+
+00:00:02.000 --> 00:00:04.000
+visualizing the recipe, which is based off
+
+00:00:04.143 --> 00:00:05.550
+the Food.com Kaggle dataset.
+
+00:00:06.144 --> 00:00:08.144
+Our visualization is composed of
+
+00:00:08.144 --> 00:00:09.485
+a scatterplot and a word cloud 
+
+00:00:09.813 --> 00:00:11.549
+and by using the dropdowns
+
+00:00:11.549 --> 00:00:13.022
+on the x and y axes
+
+00:00:13.370 --> 00:00:15.370
+a user is able to select attributes that 
+
+00:00:15.370 --> 00:00:17.107
+they may want to compare about a recipe.
+
+00:00:17.607 --> 00:00:20.741
+So lets say they wanted to compare protein to calories.
+
+00:00:23.756 --> 00:00:26.962
+By selecting these attributes on the x and y axes,
+
+00:00:26.962 --> 00:00:28.713
+the graph itself also updates
+
+00:00:29.108 --> 00:00:31.119
+accordingly to reflect these attributes.
+
+00:00:31.743 --> 00:00:33.743
+We can then hover over a point to show
+
+00:00:33.743 --> 00:00:34.951
+the individual recipe
+
+00:00:35.346 --> 00:00:37.163
+or we can use a brushing mechanism
+
+00:00:37.361 --> 00:00:39.535
+to get a list of all the recipes within a brush
+
+00:00:40.162 --> 00:00:40.985
+and even
+
+00:00:42.000 --> 00:00:43.800
+look at the specifics
+
+00:00:44.192 --> 00:00:45.586
+of the selected attributes
+
+00:00:46.142 --> 00:00:48.817
+and then we can click on the actual name itself
+
+00:00:49.340 --> 00:00:51.532
+to get to the associated Food.com website.
+
+00:00:51.826 --> 00:00:53.673
+We also have a legend that shows whether the points
+
+00:00:53.673 --> 00:00:55.982
+are breakfast, lunch, or dinner items.
+
+00:00:56.472 --> 00:00:58.048
+ The word cloud on the right is composed of
+
+00:00:58.048 --> 00:01:00.770
+the most common ingredients in all the displayed recipes
+
+00:01:00.770 --> 00:01:02.948
+and therefore are the ingredients that a user is
+
+00:01:02.948 --> 00:01:04.948
+most likely to have in their fridge (or on hand)
+
+00:01:05.602 --> 00:01:08.725
+If i wanted to find a recipe that has just egg and onions,
+
+00:01:09.706 --> 00:01:12.335
+I would click on egg, then I would click on onion
+
+00:01:12.564 --> 00:01:14.843
+and now on the scatterplot are displayed
+
+00:01:15.268 --> 00:01:17.323
+only recipes with egg and onion.
+
+00:01:18.000 --> 00:01:21.058
+And I can use the button down here to clear all ingredients.
+
+00:01:21.558 --> 00:01:22.777
+And reset it back to zero. 
+
+00:01:23.627 --> 00:01:26.460
+But let's say I wanted to look and save the recipes
+
+00:01:26.460 --> 00:01:27.883
+that have eggs and onions.
+
+00:01:28.635 --> 00:01:31.189
+I could go onto the scatterplot and click
+
+00:01:32.300 --> 00:01:34.925
+on the point and the recipe itself is then
+
+00:01:34.925 --> 00:01:36.766
+is then added to the table down here.
+
+00:01:38.073 --> 00:01:39.922
+And I could keep adding these recipes
+
+00:01:39.922 --> 00:01:41.584
+until I don't want to anymore.
+
+00:01:42.565 --> 00:01:44.301
+Let's say I just added a breakfast item
+
+00:01:44.301 --> 00:01:45.481
+and two dinner items,
+
+00:01:46.265 --> 00:01:48.524
+and we can compare the individual attributes
+
+00:01:48.982 --> 00:01:51.497
+and once we're done we can clear all the saved recipes.
+
+00:01:51.955 --> 00:01:53.946
+And what's cool is we can also even go
+
+00:01:53.946 --> 00:01:56.969
+to the Food.com website by clicking on the name itself.
+
