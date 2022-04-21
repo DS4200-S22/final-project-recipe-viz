@@ -53,13 +53,6 @@ h3 {
   padding-right: 10px;
 }
 
-<<<<<<< HEAD
-.selected {
-  stroke: black;
-  stroke-width: 3;
-}
-=======
-
 th, td {
     border-bottom: 1px solid #CCC;
     padding: 10px;
@@ -88,4 +81,3 @@ tbody {
     max-height: 500px;
     overflow-y: scroll;
 }
->>>>>>> origin/main
